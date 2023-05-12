@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "TextureManager.h"
+#include "AxisIndicator.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -27,9 +28,10 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
 
-	debugCamera_ = new DebugCamera(720, 1280);
+	debugCamera_ = new DebugCamera(50, 50);
 
-
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 }
 
 void GameScene::Update() {
@@ -37,6 +39,22 @@ void GameScene::Update() {
 	player_->Update();
 
 	debugCamera_->Update();
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_RETURN))
+	{
+		isDebugCameraActive_ = true;
+	}
+#endif
+
+	if (isDebugCameraActive_)
+	{
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+	} else {
+		viewProjection_.UpdateMatrix();
+	}
 }
 
 void GameScene::Draw() {
@@ -66,6 +84,8 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	player_->Draw(viewProjection_);
+
+	
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

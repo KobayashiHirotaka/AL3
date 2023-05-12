@@ -39,26 +39,25 @@ void Player::Update() {
 	float inputFloat3[3] = {move.x + 1, move.y + 1, move.z + 1};
 
 	ImGui::Begin("Player");
-	ImGui::InputFloat3("InputFloat3", inputFloat3);
 	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 2.0f);
-	ImGui::Text("Player %d %d %d", 2050, 12, 31);
+	ImGui::Text("DebugCamera ENTER");
 	ImGui::End();
 
 	move.x = inputFloat3[0] - 1;
 	move.y = inputFloat3[1] - 1;
 	move.z = inputFloat3[2] - 1;
 
+	const float kMoveLimitX = 34;
+	const float kMoveLimitY = 18;
+
+	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
+	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
+	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
+	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
+
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	const float kMoveLimitX = 50;
-	const float kMoveLimitY = 1250;
-
-	move.x = max(move.x, -kMoveLimitX);
-	move.x = min(move.x, +kMoveLimitX);
-	move.y = max(move.y, -kMoveLimitY);
-	move.y = min(move.y, +kMoveLimitY);
 
 
 }
