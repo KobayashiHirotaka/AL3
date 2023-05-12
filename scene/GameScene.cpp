@@ -7,6 +7,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {
 	delete model_;
 	delete player_;
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -25,11 +26,17 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	// 自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
+
+	debugCamera_ = new DebugCamera(720, 1280);
+
+
 }
 
 void GameScene::Update() {
 	// 自キャラの更新
 	player_->Update();
+
+	debugCamera_->Update();
 }
 
 void GameScene::Draw() {
