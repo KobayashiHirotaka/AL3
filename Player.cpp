@@ -59,9 +59,41 @@ void Player::Update() {
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
+	Rotate();
 
+	Attack();
+
+	if (bullet_)
+	{
+		bullet_->Update();
+	}
+}
+
+void Player::Rotate() {
+	const float kRotSpeed = 0.02f;
+
+	if (input_->PushKey(DIK_A)) {
+		worldTransform_.rotation_.y -= kRotSpeed;
+
+	} else if (input_->PushKey(DIK_D)) {
+		worldTransform_.rotation_.y += kRotSpeed;
+	}
+}
+
+void Player::Attack(){
+	if (input_->PushKey(DIK_SPACE))
+	{
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		bullet_ = newBullet;
+	}
 }
 
 void Player::Draw(ViewProjection viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+
+	if (bullet_) {
+		bullet_->Draw(viewProjection);
+	}
 }
