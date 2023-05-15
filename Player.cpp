@@ -5,6 +5,12 @@
 #include "PrimitiveDrawer.h"
 #include <cassert>
 
+Player::~Player() {
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}
+
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 	assert(model);
 
@@ -41,6 +47,7 @@ void Player::Update() {
 	ImGui::Begin("Player");
 	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 2.0f);
 	ImGui::Text("DebugCamera ENTER");
+	ImGui::Text("Shot SPACE");
 	ImGui::End();
 
 	move.x = inputFloat3[0] - 1;
@@ -63,9 +70,9 @@ void Player::Update() {
 
 	Attack();
 
-	if (bullet_)
+	for (PlayerBullet* bullet : bullets_)
 	{
-		bullet_->Update();
+		bullet->Update();
 	}
 }
 
@@ -81,19 +88,20 @@ void Player::Rotate() {
 }
 
 void Player::Attack(){
-	if (input_->PushKey(DIK_SPACE))
+	if (input_->TriggerKey(DIK_SPACE))
 	{
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_);
 
-		bullet_ = newBullet;
+		bullets_.push_back(newBullet);
 	}
 }
 
 void Player::Draw(ViewProjection viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
-	if (bullet_) {
-		bullet_->Draw(viewProjection);
+	for (PlayerBullet* bullet : bullets_)
+	{
+		bullet->Draw(viewProjection);
 	}
 }
