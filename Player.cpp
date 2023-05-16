@@ -23,6 +23,14 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 }
 
 void Player::Update() { 
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+	
 	worldTransform_.TransferMatrix();
 
 	Vector3 move = {0, 0, 0};
@@ -90,8 +98,13 @@ void Player::Rotate() {
 void Player::Attack(){
 	if (input_->TriggerKey(DIK_SPACE))
 	{
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		velocity = TransForNormal(velocity, worldTransform_.matWorld_);
+
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 		bullets_.push_back(newBullet);
 	}
