@@ -13,6 +13,8 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 	textureHandle_ = textureHandle;
 
 	worldTransform_.Initialize();
+	worldTransform_.translation_.y = 2.0f;
+	worldTransform_.translation_.z = 30.0f;
 }
 
 void Enemy::Update()
@@ -21,16 +23,47 @@ void Enemy::Update()
 
 	Vector3 move = {0, 0, 0};
 
-	const float kEnemySpeed = 0.2f;
+	switch (phase_)
+	{
+	case Phase::Approach:
+	default:
+		ApproachPhaseUpdate();
+		break;
 
-	move.z -= kEnemySpeed;
-
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
-	worldTransform_.matWorld_ = MakeAffineMatrix(
-	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+	case Phase::Leave:
+		LeavePhaseUpdate();
+		break;
+	}
 }
 
 void Enemy::Draw(ViewProjection viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+}
+
+void Enemy::ApproachPhaseUpdate()
+{
+	const float kApproachEnemySpeed = 0.2f;
+	Vector3 move = {0, 0, 0};
+
+	move.z -= kApproachEnemySpeed;
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	worldTransform_.matWorld_ = MakeAffineMatrix(
+	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+
+	if (worldTransform_.translation_.z < 0.0f) {
+		phase_ = Phase::Leave;
+	}
+}
+
+void Enemy::LeavePhaseUpdate()
+{
+	const float kLeaveEnemyLPSpeed = 0.3f;
+	Vector3 move = {0, 0, 0};
+
+	move.x -= kLeaveEnemyLPSpeed;
+	move.y += kLeaveEnemyLPSpeed;
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	worldTransform_.matWorld_ = MakeAffineMatrix(
+	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 }
