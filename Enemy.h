@@ -35,4 +35,6 @@ private:
 	Input* input_ = nullptr;
 
 	Phase phase_ = Phase::Start;
+
+	static void (Enemy::*spFuncTable[])();
 };

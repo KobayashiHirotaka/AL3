@@ -17,13 +17,18 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 	worldTransform_.translation_.z = 30.0f;
 }
 
+void (Enemy::*Enemy::spFuncTable[])() = {
+	&Enemy::ApproachPhaseUpdate, 
+	&Enemy::LeavePhaseUpdate
+};
+
 void Enemy::Update()
 { 
 	worldTransform_.TransferMatrix(); 
 
 	Vector3 move = {0, 0, 0};
 
-	switch (phase_)
+	/*switch (phase_)
 	{
 	case Phase::Approach:
 	default:
@@ -33,7 +38,20 @@ void Enemy::Update()
 	case Phase::Leave:
 		LeavePhaseUpdate();
 		break;
+	}*/
+
+	static_cast<size_t>(phase_);
+
+	(this->*spFuncTable[0])();
+
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	worldTransform_.matWorld_ = MakeAffineMatrix(
+	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+
+	if (worldTransform_.translation_.z < 0.0f) {
+		(this->*spFuncTable[1])();
 	}
+
 }
 
 void Enemy::Draw(ViewProjection viewProjection)
@@ -50,10 +68,6 @@ void Enemy::ApproachPhaseUpdate()
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	if (worldTransform_.translation_.z < 0.0f) {
-		phase_ = Phase::Leave;
-	}
 }
 
 void Enemy::LeavePhaseUpdate()
