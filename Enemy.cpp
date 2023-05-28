@@ -1,69 +1,48 @@
-#include "Enemy.h"
+﻿#include "Enemy.h"
 #include "Matrix.h"
-#include "TextureManager.h"
-#include "ImGuiManager.h"
-#include "PrimitiveDrawer.h"
 #include <cassert>
 
-void Enemy::Initialize(Model* model, uint32_t textureHandle)
+Enemy::Enemy() {}
+
+Enemy::~Enemy() { delete phase_; }
+
+void Enemy::Initialize(Model* model) 
 {
 	assert(model);
 
 	model_ = model;
-	textureHandle_ = textureHandle;
+	// テクスチャ読み込み
+	textureHandle_ = TextureManager::Load("sample.png");
+
+	// フェーズ開始
+	phase_ = new EnemyApproach();
 
 	worldTransform_.Initialize();
-	worldTransform_.translation_.y = 2.0f;
-	worldTransform_.translation_.z = 30.0f;
+
+	worldTransform_.translation_ = {0, 2, 20};
 }
 
-void Enemy::Update()
+void Enemy::Update() 
+{
+	phase_->Update(this);
+
+	// ワールドトランスフォームの更新
+	worldTransform_.UpdateMatrix();
+}
+
+void Enemy::ChangePhase(EnemyState* newState) 
+{
+	delete phase_;
+	phase_ = newState;
+}
+
+void Enemy::Move(Vector3 speed) 
 { 
-	worldTransform_.TransferMatrix(); 
+	worldTransform_.translation_ += speed; 
+};
 
-	Vector3 move = {0, 0, 0};
-
-	switch (phase_)
-	{
-	case Phase::Approach:
-	default:
-		ApproachPhaseUpdate();
-		break;
-
-	case Phase::Leave:
-		LeavePhaseUpdate();
-		break;
-	}
-}
-
-void Enemy::Draw(ViewProjection viewProjection)
+void Enemy::Draw(const ViewProjection& viewProjection) 
 {
+	// モデルの描画
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-}
-
-void Enemy::ApproachPhaseUpdate()
-{
-	const float kApproachEnemySpeed = 0.2f;
-	Vector3 move = {0, 0, 0};
-
-	move.z -= kApproachEnemySpeed;
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
-	worldTransform_.matWorld_ = MakeAffineMatrix(
-	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	if (worldTransform_.translation_.z < 0.0f) {
-		phase_ = Phase::Leave;
-	}
-}
-
-void Enemy::LeavePhaseUpdate()
-{
-	const float kLeaveEnemyLPSpeed = 0.3f;
-	Vector3 move = {0, 0, 0};
-
-	move.x -= kLeaveEnemyLPSpeed;
-	move.y += kLeaveEnemyLPSpeed;
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
-	worldTransform_.matWorld_ = MakeAffineMatrix(
-	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 }
