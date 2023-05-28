@@ -4,7 +4,10 @@
 
 Enemy::Enemy() {}
 
-Enemy::~Enemy() { delete phase_; }
+Enemy::~Enemy()
+{
+	delete phase_; 
+}
 
 void Enemy::Initialize(Model* model) 
 {
