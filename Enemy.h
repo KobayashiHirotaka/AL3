@@ -2,15 +2,23 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Input.h"
+#include "EnemyBullet.h"
+#include <List>
 
 class Enemy {
 public:
+
+	~Enemy();
 
 	void Initialize(Model* model, uint32_t textureHandle);
 
 	void Update();
 
+	void Fire();
+
 	void Draw(ViewProjection viewProjection);
+
+	void ApproachPhaseInitialize();
 
 	void ApproachPhaseUpdate();
 
@@ -23,6 +31,7 @@ public:
 		Leave,
 	};
 
+	static const int kFireInterval = 60;
 
 private:
 
@@ -35,4 +44,8 @@ private:
 	Input* input_ = nullptr;
 
 	Phase phase_ = Phase::Start;
+
+	std::list<EnemyBullet*> bullets_;
+
+	int32_t shotTimer_ = 0;
 };

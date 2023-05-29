@@ -5,6 +5,14 @@
 #include "PrimitiveDrawer.h"
 #include <cassert>
 
+Enemy::~Enemy()
+{
+	for (EnemyBullet* bullet : bullets_)
+	{
+		delete bullet;
+	}
+}
+
 void Enemy::Initialize(Model* model, uint32_t textureHandle)
 {
 	assert(model);
@@ -13,8 +21,11 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 	textureHandle_ = textureHandle;
 
 	worldTransform_.Initialize();
+	worldTransform_.translation_.x = 7.0f;
 	worldTransform_.translation_.y = 2.0f;
 	worldTransform_.translation_.z = 30.0f;
+
+	ApproachPhaseInitialize();
 }
 
 void Enemy::Update()
@@ -28,6 +39,11 @@ void Enemy::Update()
 	case Phase::Approach:
 	default:
 		ApproachPhaseUpdate();
+		for (EnemyBullet* bullet : bullets_)
+		{
+			bullet->Update();
+		}
+
 		break;
 
 	case Phase::Leave:
@@ -39,6 +55,29 @@ void Enemy::Update()
 void Enemy::Draw(ViewProjection viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+
+	for (EnemyBullet* bullet : bullets_) 
+	{
+		bullet->Draw(viewProjection);
+	}
+}
+
+void Enemy::Fire()
+{
+	const float kBulletSpeed = -1.0f;
+	Vector3 velocity(0, 0, kBulletSpeed);
+
+	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+	EnemyBullet* newBullet = new EnemyBullet();
+	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+
+	bullets_.push_back(newBullet);
+}
+
+void Enemy::ApproachPhaseInitialize()
+{ 
+	shotTimer_ = 0;
 }
 
 void Enemy::ApproachPhaseUpdate()
@@ -51,8 +90,13 @@ void Enemy::ApproachPhaseUpdate()
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
-	if (worldTransform_.translation_.z < 0.0f) {
-		phase_ = Phase::Leave;
+	shotTimer_--;
+
+	if (shotTimer_ < 0)
+	{
+		Fire();
+
+		shotTimer_ = kFireInterval;
 	}
 }
 
