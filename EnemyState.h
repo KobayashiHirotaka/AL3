@@ -25,5 +25,5 @@ class EnemyLeave : public EnemyState
 public:
 	void Update(Enemy* enemy);
 
-	const Vector3 kCharacterLeaveSpeed = {-0.5f, 0.5f, 0.0f};
+	const Vector3 kCharacterLeaveSpeed = {-0.3f, 0.3f, 0.0f};
 };
