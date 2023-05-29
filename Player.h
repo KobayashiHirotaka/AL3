@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include "Input.h"
 #include "PlayerBullet.h"
+#include "Vector3.h"
 #include <List>
 
 class Player {
@@ -19,6 +20,8 @@ public:
 	void Attack();
 
 	void Draw(ViewProjection viewProjection);
+
+	Vector3 GetWorldPosition();
 
 
 private:

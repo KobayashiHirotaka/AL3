@@ -1,4 +1,4 @@
-#include "Player.h"
+﻿#include "Player.h"
 #include "Matrix.h"
 #include "TextureManager.h"
 #include "ImGuiManager.h"
@@ -108,6 +108,18 @@ void Player::Attack(){
 
 		bullets_.push_back(newBullet);
 	}
+}
+
+Vector3 Player::GetWorldPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
 }
 
 void Player::Draw(ViewProjection viewProjection) {
