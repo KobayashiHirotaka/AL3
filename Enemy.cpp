@@ -30,6 +30,14 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 
 void Enemy::Update()
 { 
+	bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
 	worldTransform_.TransferMatrix(); 
 
 	Vector3 move = {0, 0, 0};
