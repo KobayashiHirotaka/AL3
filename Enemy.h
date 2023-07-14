@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 
-class EnemyState;
+class IEnemyState;
 
 class Enemy {
 public:
@@ -20,7 +20,7 @@ public:
 
 	void Move(Vector3 speed);
 
-	void ChangePhase(EnemyState* newState);
+	void ChangePhase(IEnemyState* newState);
 
 	Vector3 GetTranslation() { return worldTransform_.translation_; };
 
@@ -32,5 +32,5 @@ private:
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
 
-	EnemyState* phase_ = nullptr;
+	IEnemyState* phase_ = nullptr;
 };

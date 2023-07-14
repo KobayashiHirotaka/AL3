@@ -27,7 +27,7 @@ void Enemy::Update() {
 	worldTransform_.UpdateMatrix();
 }
 
-void Enemy::ChangePhase(EnemyState* newState) {
+void Enemy::ChangePhase(IEnemyState* newState) {
 	delete phase_;
 	phase_ = newState;
 }

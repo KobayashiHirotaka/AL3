@@ -4,15 +4,15 @@
 
 class Enemy;
 
-class EnemyState
+class IEnemyState
 {
 public:
-	virtual ~EnemyState(){};
+	virtual ~IEnemyState(){};
 
 	virtual void Update(Enemy* enemy) = 0;
 };
 
-class EnemyApproach : public EnemyState 
+class EnemyApproach : public IEnemyState 
 {
 public:
 	void Update(Enemy* enemy);
@@ -20,7 +20,7 @@ public:
 	const Vector3 kCharacterApproachSpeed = {0.0f, 0.0f, -0.2f};
 };
 
-class EnemyLeave : public EnemyState
+class EnemyLeave : public IEnemyState
 {
 public:
 	void Update(Enemy* enemy);
