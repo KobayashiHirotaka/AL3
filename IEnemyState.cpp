@@ -1,4 +1,4 @@
-#include "EnemyState.h"
+#include "IEnemyState.h"
 
 void EnemyApproach::Update(Enemy* enemy)
 {

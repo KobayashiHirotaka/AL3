@@ -1,5 +1,5 @@
 #pragma once
-#include "EnemyState.h"
+#include "IEnemyState.h"
 #include "Matrix.h"
 #include "Model.h"
 #include "WorldTransform.h"
