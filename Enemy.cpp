@@ -1,10 +1,11 @@
-#include "Enemy.h"
+﻿#include "Enemy.h"
 #include "Matrix.h"
 #include "TextureManager.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "Player.h"
 #include <cassert>
+
 
 Enemy::~Enemy()
 {
@@ -67,10 +68,21 @@ void Enemy::Fire()
 {
 	assert(player_);
 
-	//�e�̑��x
+	//弾の速度
 	const float kBulletSpeed = -1.0f;
 	Vector3 velocity(0, 0, kBulletSpeed);
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+	// 自キャラのワールド座標を取得
+	Vector3 playerWorldPos = player_->GetWorldPosition();
+	// 敵のワールド座標を取得
+	Vector3 enemyWorldPos = GetWorldPosition();
+	// 敵キャラから自キャラへの差分ベクトルを求める
+	Vector3 diffVector = Subtract(playerWorldPos, enemyWorldPos);
+	// ベクトルの正規化
+	diffVector = Normalize(diffVector);
+	// ベクトルの長さを速さに合わせる
+	diffVector = AdjustVectorLength(diffVector, kBulletSpeed);
 
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
@@ -79,7 +91,7 @@ void Enemy::Fire()
 }
 
 Vector3 Enemy::GetWorldPosition() {
-	// ���[���h���W������ϐ�
+	// ワールド座標を入れる変数
 	Vector3 worldPos;
 
 	worldPos.x = worldTransform_.translation_.x;

@@ -16,6 +16,18 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
+Vector3 Normalize(const Vector3& v) {
+	Vector3 result;
+
+	float date = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+	if (date != 0) {
+		result.x = v.x / date;
+		result.y = v.y / date;
+		result.z = v.z / date;
+	}
+	return result;
+}
+
 float Dot(const Vector3& v1, const Vector3& v2) {
 	float result;
 	result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
@@ -26,6 +38,17 @@ float Length(const Vector3& v) {
 	float result;
 	result = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 	return result;
+}
+
+Vector3 AdjustVectorLength(const Vector3& vector, float desiredLength) {
+	float currentLength =
+	    std::sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+	if (currentLength > 0.0f) {
+		float scale = desiredLength / currentLength;
+		return Vector3(vector.x * scale, vector.y * scale, vector.z * scale);
+	} else {
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
 }
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {

@@ -32,3 +32,7 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rot, const Vecto
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
 Vector3 VectorAdd(const Vector3& translation, const Vector3& move);
+
+Vector3 Normalize(const Vector3& v);
+
+Vector3 AdjustVectorLength(const Vector3& vector, float desiredLength);
