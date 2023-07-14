@@ -23,11 +23,10 @@ public:
 
 	Vector3 GetWorldPosition();
 
+	WorldTransform worldTransform_;
 
 private:
 	
-	WorldTransform worldTransform_;
-
 	Model* model_ = nullptr;
 
 	uint32_t textureHandle_ = 0u;

@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Input.h"
+#include "Player.h"
 #include "EnemyBullet.h"
 #include <List>
 
@@ -56,4 +57,6 @@ private:
 	int32_t shotTimer_ = 0;
 
 	Player* player_ = nullptr;
+
+	Vector3 worldPos;
 };

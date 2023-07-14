@@ -25,7 +25,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 	worldTransform_.Initialize();
 	worldTransform_.translation_.x = 7.0f;
 	worldTransform_.translation_.y = 2.0f;
-	worldTransform_.translation_.z = 30.0f;
+	worldTransform_.translation_.z = 50.0f;
 
 	ApproachPhaseInitialize();
 }
@@ -69,20 +69,26 @@ void Enemy::Fire()
 	assert(player_);
 
 	//弾の速度
-	const float kBulletSpeed = -1.0f;
+	const float kBulletSpeed = 1.0f;
 	Vector3 velocity(0, 0, kBulletSpeed);
-	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 	// 自キャラのワールド座標を取得
-	Vector3 playerWorldPos = player_->GetWorldPosition();
+	Vector3 playerWorldPos = player_->worldTransform_.translation_;
 	// 敵のワールド座標を取得
-	Vector3 enemyWorldPos = GetWorldPosition();
+	GetWorldPosition();
 	// 敵キャラから自キャラへの差分ベクトルを求める
-	Vector3 diffVector = Subtract(playerWorldPos, enemyWorldPos);
+	Vector3 diffVector;
+
+	diffVector = Subtract(playerWorldPos, worldPos);
 	// ベクトルの正規化
-	diffVector = Normalize(diffVector);
+	Vector3 normalizeDiffVector;
+
+	normalizeDiffVector = Normalize(diffVector);
+
 	// ベクトルの長さを速さに合わせる
-	diffVector = AdjustVectorLength(diffVector, kBulletSpeed);
+    velocity = VectorScale(normalizeDiffVector, kBulletSpeed);
+
+	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
@@ -90,10 +96,9 @@ void Enemy::Fire()
 	bullets_.push_back(newBullet);
 }
 
-Vector3 Enemy::GetWorldPosition() {
-	// ワールド座標を入れる変数
-	Vector3 worldPos;
-
+Vector3 Enemy::GetWorldPosition() 
+{
+	
 	worldPos.x = worldTransform_.translation_.x;
 	worldPos.y = worldTransform_.translation_.y;
 	worldPos.z = worldTransform_.translation_.z;
@@ -108,7 +113,7 @@ void Enemy::ApproachPhaseInitialize()
 
 void Enemy::ApproachPhaseUpdate()
 {
-	const float kApproachEnemySpeed = 0.2f;
+	const float kApproachEnemySpeed = 0.05f;
 	Vector3 move = {0, 0, 0};
 
 	move.z -= kApproachEnemySpeed;
