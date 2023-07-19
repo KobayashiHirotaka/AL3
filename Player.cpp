@@ -114,7 +114,6 @@ void Player::Attack(){
 
 Vector3 Player::GetWorldPosition()
 {
-	//ワールド座標を入れる変数
 	Vector3 worldPos;
 
 	worldPos.x = worldTransform_.translation_.x;
@@ -131,4 +130,9 @@ void Player::Draw(ViewProjection viewProjection) {
 	{
 		bullet->Draw(viewProjection);
 	}
+}
+
+void Player::OnCollision()
+{
+
 }

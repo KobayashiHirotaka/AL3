@@ -23,9 +23,13 @@ public:
 
 	Vector3 GetWorldPosition();
 
-	WorldTransform worldTransform_;
+	void OnCollision();
+
+	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
 private:
+
+	WorldTransform worldTransform_;
 	
 	Model* model_ = nullptr;
 

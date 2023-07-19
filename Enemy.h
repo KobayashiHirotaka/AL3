@@ -40,6 +40,10 @@ public:
 
 	Vector3 GetWorldPosition();
 
+	void OnCollision();
+
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
+
 private:
 
 	WorldTransform worldTransform_;
@@ -57,6 +61,4 @@ private:
 	int32_t shotTimer_ = 0;
 
 	Player* player_ = nullptr;
-
-	Vector3 worldPos;
 };

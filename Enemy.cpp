@@ -73,20 +73,16 @@ void Enemy::Fire()
 	Vector3 velocity(0, 0, kBulletSpeed);
 
 	// 自キャラのワールド座標を取得
-	Vector3 playerWorldPos = player_->worldTransform_.translation_;
+	Vector3 playerWorldPos = player_->GetWorldPosition();
 	// 敵のワールド座標を取得
-	GetWorldPosition();
+	Vector3 enemyWorldPos = GetWorldPosition();
 	// 敵キャラから自キャラへの差分ベクトルを求める
-	Vector3 diffVector;
+	Vector3 diffVector = Subtract(playerWorldPos, enemyWorldPos);
 
-	diffVector = Subtract(playerWorldPos, worldPos);
-	// ベクトルの正規化
-	Vector3 normalizeDiffVector;
-
-	normalizeDiffVector = Normalize(diffVector);
+	diffVector = Normalize(diffVector);
 
 	// ベクトルの長さを速さに合わせる
-    velocity = VectorScale(normalizeDiffVector, kBulletSpeed);
+    velocity = VectorScale(diffVector, kBulletSpeed);
 
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
@@ -98,7 +94,8 @@ void Enemy::Fire()
 
 Vector3 Enemy::GetWorldPosition() 
 {
-	
+	Vector3 worldPos;
+
 	worldPos.x = worldTransform_.translation_.x;
 	worldPos.y = worldTransform_.translation_.y;
 	worldPos.z = worldTransform_.translation_.z;
@@ -141,4 +138,9 @@ void Enemy::LeavePhaseUpdate()
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+}
+
+void Enemy::OnCollision()
+{
+	
 }

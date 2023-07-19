@@ -48,6 +48,8 @@ void GameScene::Update() {
 		enemy_->Update();
 	}
 
+	CheckAllCollisions();
+
 	debugCamera_->Update();
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN))
@@ -116,4 +118,39 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckAllCollisions()
+{ 
+	Vector3 posA, posB;
+	float PlayerRadius = 1.0f;
+	float EnemyBulletRadius = 1.0f;
+
+	//const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
+	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
+
+	#pragma region 自キャラと敵弾の当たり判定
+	posA = player_->GetWorldPosition();
+
+	for (EnemyBullet* bullet : enemyBullets)
+	{
+		posB = bullet->GetWorldPosition();
+
+		// 座標AとBの距離を求める
+		Vector3 distance = {
+		    (posB.x - posA.x) * (posB.x - posA.x),
+			(posB.y - posA.y) * (posB.y - posA.y),
+		    (posB.z - posA.z) * (posB.z - posA.z)};
+
+
+		if (distance.x + distance.y + distance.z <= (PlayerRadius + EnemyBulletRadius) * (PlayerRadius + EnemyBulletRadius))
+		{
+			player_->OnCollision();
+
+			bullet->OnCollision();
+		}
+	}
+
+
+	#pragma endregion
 }
