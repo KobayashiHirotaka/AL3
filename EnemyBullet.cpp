@@ -1,4 +1,5 @@
 #include "EnemyBullet.h"
+#include "ImGuiManager.h"
 #include <cassert>
 
 void EnemyBullet::Initialize(Model* model, const Vector3& positon, const Vector3& velocity) {
@@ -24,11 +25,23 @@ void EnemyBullet::Update() {
 	}
 
 	worldTransform_.UpdateMatrix();
+
+	ImGui::Begin("EBullet");
+	ImGui::Text("isDead = %d", isDead_);
+	ImGui::End();
 }
 
-void EnemyBullet::Draw(const ViewProjection& viewProjection) 
+void EnemyBullet::Draw(const ViewProjection& viewProjection)
 {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	if (isDead_ == false)
+	{
+		model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	}
+}
+
+void EnemyBullet::OnCollision() 
+{ 
+	isDead_ = true;
 }
 
 Vector3 EnemyBullet::GetWorldPosition() {
@@ -39,9 +52,4 @@ Vector3 EnemyBullet::GetWorldPosition() {
 	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
-}
-
-void EnemyBullet::OnCollision()
-{ 
-	isDead_ = true;
 }
