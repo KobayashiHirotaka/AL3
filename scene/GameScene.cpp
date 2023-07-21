@@ -177,12 +177,12 @@ void GameScene::CheckAllCollisions()
 	#pragma endregion
 
 	#pragma region 自弾と敵弾の当たり判定
-	for (PlayerBullet* bullet : playerBullets)
+	for (PlayerBullet* playerBullet : playerBullets)
 	{
-		posA = bullet->GetWorldPosition();
-		for (EnemyBullet* bullet2 : enemyBullets)
+		posA = playerBullet->GetWorldPosition();
+		for (EnemyBullet* enemhyBullet : enemyBullets)
 		{
-			posB = bullet2->GetWorldPosition();
+			posB = enemhyBullet->GetWorldPosition();
 
 			// 座標AとBの距離を求める
 			Vector3 distance = {
@@ -192,9 +192,9 @@ void GameScene::CheckAllCollisions()
 
 			if (distance.x + distance.y + distance.z <=
 			    (EnemyBulletRadius + PlayerBulletRadius) * (EnemyBulletRadius + PlayerBulletRadius)) {
-				bullet->OnCollision();
+				playerBullet->OnCollision();
 
-				bullet2->OnCollision();
+				enemhyBullet->OnCollision();
 			}
 		}
 	}
