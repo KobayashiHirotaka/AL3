@@ -10,6 +10,8 @@ GameScene::~GameScene() {
 	delete player_;
 	delete enemy_;
 	delete debugCamera_;
+	delete skydome_;
+	delete skydomeModel_;
 }
 
 void GameScene::Initialize() {
@@ -37,6 +39,10 @@ void GameScene::Initialize() {
 
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
+
+	skydomeModel_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome();
+	skydome_->Initialize(skydomeModel_);
 }
 
 void GameScene::Update() {
@@ -49,6 +55,8 @@ void GameScene::Update() {
 	}
 
 	CheckAllCollisions();
+
+	skydome_->Update();
 
 	debugCamera_->Update();
 #ifdef _DEBUG
@@ -98,9 +106,12 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 
-	if (enemy_ != nullptr) {
+	if (enemy_ != nullptr)
+	{
 		enemy_->Draw(viewProjection_);
 	}
+
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
