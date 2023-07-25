@@ -5,13 +5,15 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {
+GameScene::~GameScene()
+{
 	delete model_;
 	delete player_;
 	delete enemy_;
 	delete debugCamera_;
 	delete skydome_;
 	delete skydomeModel_;
+	delete railCamera_;
 }
 
 void GameScene::Initialize() {
@@ -43,6 +45,9 @@ void GameScene::Initialize() {
 	skydomeModel_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
 	skydome_->Initialize(skydomeModel_);
+
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize();
 }
 
 void GameScene::Update() {
@@ -57,6 +62,8 @@ void GameScene::Update() {
 	CheckAllCollisions();
 
 	skydome_->Update();
+
+	railCamera_->Updata();
 
 	debugCamera_->Update();
 #ifdef _DEBUG
