@@ -13,7 +13,6 @@ GameScene::~GameScene()
 	delete debugCamera_;
 	delete skydome_;
 	delete skydomeModel_;
-	delete railCamera_;
 }
 
 void GameScene::Initialize() {
@@ -46,8 +45,6 @@ void GameScene::Initialize() {
 	skydome_ = new Skydome();
 	skydome_->Initialize(skydomeModel_);
 
-	railCamera_ = new RailCamera();
-	railCamera_->Initialize();
 }
 
 void GameScene::Update() {
@@ -62,8 +59,6 @@ void GameScene::Update() {
 	CheckAllCollisions();
 
 	skydome_->Update();
-
-	railCamera_->Updata();
 
 	debugCamera_->Update();
 #ifdef _DEBUG
