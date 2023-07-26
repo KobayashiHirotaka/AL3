@@ -36,3 +36,5 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 Vector3 VectorAdd(const Vector3& translation, const Vector3& move);
 
 Vector3 Normalize(const Vector3& v);
+
+static Matrix4x4 Inverse(const Matrix4x4& m);
