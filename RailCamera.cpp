@@ -11,11 +11,11 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	viewProjection_.Initialize();
 }
 
-void RailCamera::Updata()
+void RailCamera::Update()
 {
 	worldTransform_.translation_.z -= 0.03f;
 
-	//worldTransform_.rotation_.y += 0.001f;
+	worldTransform_.rotation_.y += 0.001f;
 
 	//カメラオブジェクトのワールド行列からビュー行列を計算する
 	worldTransform_.matWorld_ =  MakeAffineMatrix({1.0f,1.0f,1.0f}, worldTransform_.rotation_, worldTransform_.translation_);

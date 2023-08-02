@@ -24,33 +24,32 @@ void GameScene::Initialize() {
 
 	textureHandle_ = TextureManager::Load("sample.png");
 	model_ = Model::Create();
+	skydomeModel_ = Model::CreateFromOBJ("skydome", true);
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
-	Vector3 playerPosition(0, 0, 15.0f);
 	player_ = new Player();
+	Vector3 playerPosition(0, 0, 15.0f);
 	player_->Initialize(model_, textureHandle_, playerPosition);
 
 	enemy_ = new Enemy();
+	// 敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_);
 	enemy_->Initialize(model_, textureHandle_);
 
-	debugCamera_ = new DebugCamera(50, 50);
-
-	AxisIndicator::GetInstance()->SetVisible(true);
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
-
-	//敵キャラに自キャラのアドレスを渡す
-	enemy_->SetPlayer(player_);
-
-	skydomeModel_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
 	skydome_->Initialize(skydomeModel_);
 
 	railCamera_ = new RailCamera();
-	railCamera_->Initialize(railCamera_->GetWorldTransform().translation_,railCamera_->GetWorldTransform().rotation_);
+	railCamera_->Initialize({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
 
 	player_->SetParent(&railCamera_->GetWorldTransform());
+
+	debugCamera_ = new DebugCamera(1280, 720);
+
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 }
 
 void GameScene::Update() {
@@ -66,36 +65,25 @@ void GameScene::Update() {
 
 	skydome_->Update();
 
-	railCamera_->Updata();
-
-	/*debugCamera_->Update();*/
-
-#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_RETURN))
-	{
-		isRailCameraActive_ = true;
+	#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == false) {
+		isDebugCameraActive_ = true;
+	} else if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == true) {
+		isDebugCameraActive_ = false;
 	}
 
-#endif
-
-	/*if (isDebugCameraActive_)
-	{
+	if (isDebugCameraActive_ == true) {
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	} else {
-		viewProjection_.UpdateMatrix();
-	}*/
-
-	if (isRailCameraActive_)
-	{
+		railCamera_->Update();
 		viewProjection_.matView = railCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
-	} else {
-		viewProjection_.UpdateMatrix();
 	}
+#endif
 }
 
 void GameScene::Draw()
