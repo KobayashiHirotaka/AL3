@@ -1,28 +1,28 @@
 ﻿#include "RailCamera.h"
 #include "ImGuiManager.h"
 
-void RailCamera::Initialize(const Vector3& velocity) 
+void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 {
-	// ワールドトランスフォームの初期設定
-	Vector3 worldPos = worldTransform_.translation_;
-	Vector3 rotationAngle = worldTransform_.rotation_;
+	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransform_.translation_ = position;
+	worldTransform_.rotation_ = rotation;
 
 	// ビュープロジェクションの初期化
-	viewProjection_;
+	viewProjection_.Initialize();
 }
 
 void RailCamera::Updata()
 {
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	worldTransform_.translation_.z -= 0.03f;
 
-	worldTransform_.rotation_ = Add(worldTransform_.rotation_, velocity_);
-
-	worldTransform_.UpdateMatrix();
+	//worldTransform_.rotation_.y += 0.001f;
 
 	//カメラオブジェクトのワールド行列からビュー行列を計算する
+	worldTransform_.matWorld_ =  MakeAffineMatrix({1.0f,1.0f,1.0f}, worldTransform_.rotation_, worldTransform_.translation_);
 	viewProjection_.matView = Inverse(worldTransform_.matWorld_);
 
-	//カメラの座標を画面表示する処理
-	ImGui::Begin("Camera");
-
+	ImGui::Begin("Rail Camera");
+	ImGui::DragFloat3("Camera Position", &worldTransform_.translation_.x, 0.03f);
+	ImGui::DragFloat3("Camera Rotation", &worldTransform_.rotation_.x, 0.01f);
+	ImGui::End();
 }

@@ -5,19 +5,22 @@
 #include "PrimitiveDrawer.h"
 #include <cassert>
 
-Player::~Player() {
-	for (PlayerBullet* bullet : bullets_) {
+Player::~Player()
+{
+	for (PlayerBullet* bullet : bullets_)
+	{
 		delete bullet;
 	}
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle) {
+void Player::Initialize(Model* model, uint32_t textureHandle, const Vector3& position) {
 	assert(model);
 
 	model_ = model;
 	textureHandle_ = textureHandle;
 
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = position;
 
 	input_ = Input::GetInstance();
 }
@@ -135,4 +138,9 @@ void Player::Draw(ViewProjection viewProjection) {
 void Player::OnCollision()
 {
 
+}
+
+void Player::SetParent(const WorldTransform* parent)
+{ 
+	worldTransform_.parent_ = parent;
 }

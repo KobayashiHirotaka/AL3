@@ -28,8 +28,9 @@ void GameScene::Initialize() {
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
+	Vector3 playerPosition(0, 0, 15.0f);
 	player_ = new Player();
-	player_->Initialize(model_, textureHandle_);
+	player_->Initialize(model_, textureHandle_, playerPosition);
 
 	enemy_ = new Enemy();
 	enemy_->Initialize(model_, textureHandle_);
@@ -47,7 +48,9 @@ void GameScene::Initialize() {
 	skydome_->Initialize(skydomeModel_);
 
 	railCamera_ = new RailCamera();
-	railCamera_->Initialize();
+	railCamera_->Initialize(railCamera_->GetWorldTransform().translation_,railCamera_->GetWorldTransform().rotation_);
+
+	player_->SetParent(&railCamera_->GetWorldTransform());
 }
 
 void GameScene::Update() {
@@ -65,15 +68,17 @@ void GameScene::Update() {
 
 	railCamera_->Updata();
 
-	debugCamera_->Update();
+	/*debugCamera_->Update();*/
+
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN))
 	{
-		isDebugCameraActive_ = true;
+		isRailCameraActive_ = true;
 	}
+
 #endif
 
-	if (isDebugCameraActive_)
+	/*if (isDebugCameraActive_)
 	{
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
@@ -81,10 +86,20 @@ void GameScene::Update() {
 		viewProjection_.TransferMatrix();
 	} else {
 		viewProjection_.UpdateMatrix();
+	}*/
+
+	if (isRailCameraActive_)
+	{
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+	} else {
+		viewProjection_.UpdateMatrix();
 	}
 }
 
-void GameScene::Draw() {
+void GameScene::Draw()
+{
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();

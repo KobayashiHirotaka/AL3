@@ -72,7 +72,9 @@ private: // メンバ変数
 	Skydome* skydome_;
 	Model* skydomeModel_ = nullptr;
 
-	RailCamera* railCamera_;
+	RailCamera* railCamera_ = nullptr;
+
+	bool isRailCameraActive_ = false;
 
 	/// <summary>
 	/// ゲームシーン用
