@@ -26,15 +26,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, const Vector3& pos
 }
 
 void Player::Update() { 
-	bullets_.remove_if([](PlayerBullet* bullet)
-		{
-		if (bullet->IsDead())
-		{
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+	
 	
 	worldTransform_.TransferMatrix();
 
@@ -67,6 +59,10 @@ void Player::Update() {
 	move.y = inputFloat3[1] - 1;
 	move.z = inputFloat3[2] - 1;
 
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	worldTransform_.matWorld_ = MakeAffineMatrix(
+	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+
 	worldTransform_.UpdateMatrix();
 
 	const float kMoveLimitX = 34;
@@ -77,10 +73,7 @@ void Player::Update() {
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
-	worldTransform_.matWorld_ = MakeAffineMatrix(
-	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
+	
 	Rotate();
 
 	Attack();
@@ -89,6 +82,13 @@ void Player::Update() {
 	{
 		bullet->Update();
 	}
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 }
 
 void Player::Rotate() {

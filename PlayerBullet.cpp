@@ -11,12 +11,13 @@ void PlayerBullet::Initialize(Model* model, const Vector3& positon, const Vector
 
     worldTransform_.Initialize();
     
-   GetWorldPosition() = positon;
+   worldTransform_.translation_ = positon;
 
     velocity_ = velocity;
 }
 
 void PlayerBullet::Update() { 
+      worldTransform_.UpdateMatrix(); 
     worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 
     if (--deathTimer_ <= 0)
@@ -24,7 +25,7 @@ void PlayerBullet::Update() {
 		isDead_ = true;
     }
 
-    worldTransform_.UpdateMatrix(); 
+  
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
