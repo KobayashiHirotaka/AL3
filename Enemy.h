@@ -8,12 +8,14 @@
 
 class Player;
 
+class GameScene;
+
 class Enemy {
 public:
 
 	~Enemy();
 
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 position);
 
 	void Update();
 
@@ -42,7 +44,9 @@ public:
 
 	void OnCollision();
 
-	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
+	bool IsDead() const { return isDead_; }
 
 private:
 
@@ -56,9 +60,11 @@ private:
 
 	Phase phase_ = Phase::Start;
 
-	std::list<EnemyBullet*> bullets_;
-
 	int32_t shotTimer_ = 0;
 
 	Player* player_ = nullptr;
+
+	GameScene* gameScene_ = nullptr;
+
+	bool isDead_ = false;
 };

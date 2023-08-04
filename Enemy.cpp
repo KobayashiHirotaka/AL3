@@ -4,18 +4,16 @@
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "Player.h"
+#include "GameScene.h"
 #include <cassert>
 
 
 Enemy::~Enemy()
 {
-	for (EnemyBullet* bullet : bullets_)
-	{
-		delete bullet;
-	}
+
 }
 
-void Enemy::Initialize(Model* model, uint32_t textureHandle)
+void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 position)
 {
 	assert(model);
 
@@ -23,28 +21,34 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 	textureHandle_ = textureHandle;
 
 	worldTransform_.Initialize();
-	worldTransform_.translation_.x = 7.0f;
-	worldTransform_.translation_.y = 2.0f;
-	worldTransform_.translation_.z = 70.0f;
+	worldTransform_.translation_.x = position.x;
+	worldTransform_.translation_.y = position.y;
+	worldTransform_.translation_.z = position.z;
 
 	ApproachPhaseInitialize();
+
+	isDead_ = false;
 }
 
 void Enemy::Update()
 { 
 	worldTransform_.TransferMatrix(); 
 
+
+	const float kApproachEnemySpeed = 0.05f;
 	Vector3 move = {0, 0, 0};
+
+	move.z -= kApproachEnemySpeed;
+
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	worldTransform_.matWorld_ = MakeAffineMatrix(
+	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
 	switch (phase_)
 	{
 	case Phase::Approach:
 	default:
 		ApproachPhaseUpdate();
-		for (EnemyBullet* bullet : bullets_)
-		{
-			bullet->Update();
-		}
 
 		break;
 
@@ -52,15 +56,24 @@ void Enemy::Update()
 		LeavePhaseUpdate();
 		break;
 	}
+	float inputFloat3[3] = {
+	    worldTransform_.translation_.x + 1, worldTransform_.translation_.y + 1,
+	    worldTransform_.translation_.z + 1};
+
+	ImGui::Begin("Enemy");
+	ImGui::SliderFloat3("EnemyTranslation", inputFloat3, -10.0f, 3.0f);
+	ImGui::End();
+
+	worldTransform_.translation_.x = inputFloat3[0] - 1;
+	worldTransform_.translation_.y = inputFloat3[1] - 1;
+	worldTransform_.translation_.z = inputFloat3[2] - 1;
 }
 
 void Enemy::Draw(ViewProjection viewProjection)
 {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-
-	for (EnemyBullet* bullet : bullets_) 
+	if (isDead_ == false)
 	{
-		bullet->Draw(viewProjection);
+		model_->Draw(worldTransform_, viewProjection, textureHandle_);
 	}
 }
 
@@ -89,7 +102,7 @@ void Enemy::Fire()
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
-	bullets_.push_back(newBullet);
+	gameScene_->AddEnemyBullet(newBullet);
 }
 
 Vector3 Enemy::GetWorldPosition() 
@@ -110,14 +123,6 @@ void Enemy::ApproachPhaseInitialize()
 
 void Enemy::ApproachPhaseUpdate()
 {
-	const float kApproachEnemySpeed = 0.05f;
-	Vector3 move = {0, 0, 0};
-
-	move.z -= kApproachEnemySpeed;
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
-	worldTransform_.matWorld_ = MakeAffineMatrix(
-	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
 	shotTimer_--;
 
 	if (shotTimer_ < 0)
@@ -141,6 +146,6 @@ void Enemy::LeavePhaseUpdate()
 }
 
 void Enemy::OnCollision()
-{
-	
+{ 
+	isDead_ = true;
 }
