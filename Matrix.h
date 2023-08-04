@@ -38,3 +38,7 @@ Vector3 VectorAdd(const Vector3& translation, const Vector3& move);
 Vector3 Normalize(const Vector3& v);
 
 Matrix4x4 Inverse(const Matrix4x4& m);
+
+Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
+
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);

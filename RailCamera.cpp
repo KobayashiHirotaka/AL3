@@ -13,7 +13,7 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 
 void RailCamera::Update()
 {
-	worldTransform_.translation_.z += 0.03f;
+	worldTransform_.translation_.z += 0.02f;
 
 	/*worldTransform_.rotation_.y += 0.001f;*/
 

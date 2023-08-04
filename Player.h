@@ -1,9 +1,10 @@
-#pragma once
+﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Input.h"
 #include "PlayerBullet.h"
 #include "Vector3.h"
+#include "Sprite.h"
 #include <list>
 
 class Player {
@@ -13,7 +14,7 @@ public:
 
 	void Initialize(Model* model, uint32_t textureHandle, const Vector3& position);
 
-	void Update();
+	void Update(ViewProjection viewProjection);
 
 	void Rotate();
 
@@ -29,6 +30,8 @@ public:
 
 	void SetParent(const WorldTransform* parent);
 
+	void DrawUI();
+
 private:
 
 	WorldTransform worldTransform_;
@@ -40,4 +43,12 @@ private:
 	Input* input_ = nullptr;
 
 	std::list<PlayerBullet*> bullets_;
+
+	//3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3DReticle_;
+
+	//2Dレティクル用スプライト
+	Sprite* sprite2DReticle_ = nullptr;
+
+	Vector2 ReticlePos_;
 };
