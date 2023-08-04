@@ -25,7 +25,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 	worldTransform_.Initialize();
 	worldTransform_.translation_.x = 7.0f;
 	worldTransform_.translation_.y = 2.0f;
-	worldTransform_.translation_.z = 50.0f;
+	worldTransform_.translation_.z = 70.0f;
 
 	ApproachPhaseInitialize();
 }

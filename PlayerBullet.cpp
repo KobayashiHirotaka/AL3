@@ -11,7 +11,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& positon, const Vector
 
     worldTransform_.Initialize();
     
-    worldTransform_.translation_ = positon;
+   GetWorldPosition() = positon;
 
     velocity_ = velocity;
 }
@@ -28,7 +28,7 @@ void PlayerBullet::Update() {
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
-    model_->Draw(worldTransform_, viewProjection, textureHandle_);
+    model_->Draw(worldTransform_, viewProjection);
 
 }
 
@@ -44,6 +44,6 @@ Vector3 PlayerBullet::GetWorldPosition()
 	worldPos.x = worldTransform_.translation_.x;
 	worldPos.y = worldTransform_.translation_.y;
 	worldPos.z = worldTransform_.translation_.z;
-
+    
 	return worldPos;
 }

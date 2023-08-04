@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	player_ = new Player();
-	Vector3 playerPosition(0, 0, 15.0f);
+	Vector3 playerPosition(0, 0, 30);
 	player_->Initialize(model_, textureHandle_, playerPosition);
 
 	enemy_ = new Enemy();
@@ -40,6 +40,7 @@ void GameScene::Initialize() {
 
 	skydome_ = new Skydome();
 	skydome_->Initialize(skydomeModel_);
+
 
 	railCamera_ = new RailCamera();
 	railCamera_->Initialize({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
@@ -66,6 +67,7 @@ void GameScene::Update() {
 	skydome_->Update();
 
 	#ifdef _DEBUG
+
 	if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == false) {
 		isDebugCameraActive_ = true;
 	} else if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == true) {
