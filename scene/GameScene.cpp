@@ -42,7 +42,7 @@ void GameScene::Initialize() {
 
 	player_ = new Player();
 	Vector3 playerPosition(0, 0, 30);
-	player_->Initialize(model_, playerPosition);
+	player_->Initialize(model_, textureHandle_, playerPosition);
 
 	LoadEnemyPopData();
 
