@@ -2,8 +2,9 @@
 #include "Model.h"
 #include "Vector3.h"
 #include "WorldTransform.h"
+#include "Collider.h"
 
-class EnemyBullet
+class EnemyBullet : public Collider
 {
 public:
 	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);

@@ -5,8 +5,10 @@
 #include "PlayerBullet.h"
 #include "Vector3.h"
 #include <list>
+#include "Collider.h"
 
-class Player {
+class Player : public Collider
+{
 public:
 	
 	~Player();

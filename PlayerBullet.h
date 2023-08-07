@@ -2,9 +2,10 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Vector3.h"
+#include "Collider.h"
 
 
-class PlayerBullet
+class PlayerBullet : public Collider
 {
 public:
 
