@@ -6,6 +6,7 @@
 #include "EnemyBullet.h"
 #include <list>
 #include "Collider.h"
+#include "CollisionConfig.h"
 
 class Player;
 

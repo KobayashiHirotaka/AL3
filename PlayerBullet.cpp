@@ -14,6 +14,9 @@ void PlayerBullet::Initialize(Model* model, const Vector3& positon, const Vector
     worldTransform_.translation_ = positon;
 
     velocity_ = velocity;
+
+    SetCollisionAttribute(kCollisionAttributePlayer);
+	SetCollisionMask(~kCollisionAttributePlayer);
 }
 
 void PlayerBullet::Update() { 

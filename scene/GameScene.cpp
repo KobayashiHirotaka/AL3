@@ -122,31 +122,37 @@ void GameScene::CheckAllCollisions()
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
 	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
 
-	#pragma region 自キャラと敵弾の当たり判定
-	
-	for (EnemyBullet* bullet : enemyBullets)
-	{
-		CheckCollisionPair(player_, bullet);
-	}
-	#pragma endregion
+	std::list<Collider*> colliders_;
 
-	#pragma region 敵キャラと自弾の当たり判定
-	
+	colliders_.push_back(player_);
+
+	colliders_.push_back(enemy_);
+
 	for (PlayerBullet* bullet : playerBullets)
 	{
-		CheckCollisionPair(enemy_, bullet);
+		colliders_.push_back(bullet);
 	}
-	#pragma endregion
 
-	#pragma region 自弾と敵弾の当たり判定
-	for (PlayerBullet* playerBullet : playerBullets)
+	for (EnemyBullet* bullet : enemyBullets) 
 	{
-		for (EnemyBullet* enemyBullet : enemyBullets)
+		colliders_.push_back(bullet);
+	}
+
+	std::list<Collider*>::iterator itrA = colliders_.begin();
+
+	for (; itrA != colliders_.end(); ++itrA)
+	{
+		Collider* colliderA = *itrA;
+
+		std::list<Collider*>::iterator itrB = itrA;
+		itrB++;
+
+		for (; itrB != colliders_.end(); ++itrB)
 		{
-			CheckCollisionPair(playerBullet, enemyBullet);
+			Collider* colliderB = *itrB;
+			CheckCollisionPair(colliderA, colliderB);
 		}
 	}
-	#pragma endregion
 }
 
 void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) 
@@ -158,7 +164,14 @@ void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB)
 
 	float distance = sqrt(
 	    (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
-	    (posB.z - posA.z));
+	    (posB.z - posA.z) * (posB.z - posA.z));
+
+	//衝突フィルタリング
+	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 || 
+		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0)
+	{
+		return;
+	}
 
 	// 球と球の交差判定
 	if (distance <= colliderA->GetRadius() + colliderB->GetRadius())

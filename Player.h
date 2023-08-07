@@ -6,6 +6,7 @@
 #include "Vector3.h"
 #include <list>
 #include "Collider.h"
+#include "CollisionConfig.h"
 
 class Player : public Collider
 {

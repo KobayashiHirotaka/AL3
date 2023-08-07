@@ -5,13 +5,16 @@
 #include "PrimitiveDrawer.h"
 #include <cassert>
 
-Player::~Player() {
-	for (PlayerBullet* bullet : bullets_) {
+Player::~Player() 
+{
+	for (PlayerBullet* bullet : bullets_) 
+	{
 		delete bullet;
 	}
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle) {
+void Player::Initialize(Model* model, uint32_t textureHandle)
+{
 	assert(model);
 
 	model_ = model;
@@ -20,9 +23,13 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	worldTransform_.Initialize();
 
 	input_ = Input::GetInstance();
+
+	SetCollisionAttribute(kCollisionAttributePlayer);
+	SetCollisionMask(~kCollisionAttributePlayer);
 }
 
-void Player::Update() { 
+void Player::Update()
+{ 
 	bullets_.remove_if([](PlayerBullet* bullet)
 		{
 		if (bullet->IsDead())
@@ -86,7 +93,8 @@ void Player::Update() {
 	}
 }
 
-void Player::Rotate() {
+void Player::Rotate() 
+{
 	const float kRotSpeed = 0.02f;
 
 	if (input_->PushKey(DIK_A)) {
@@ -97,7 +105,8 @@ void Player::Rotate() {
 	}
 }
 
-void Player::Attack(){
+void Player::Attack()
+{
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		const float kBulletSpeed = 1.0f;
@@ -123,7 +132,8 @@ Vector3 Player::GetWorldPosition()
 	return worldPos;
 }
 
-void Player::Draw(ViewProjection viewProjection) {
+void Player::Draw(ViewProjection viewProjection)
+{
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
 	for (PlayerBullet* bullet : bullets_)
