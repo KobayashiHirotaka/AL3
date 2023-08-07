@@ -57,6 +57,4 @@ private:
 	int32_t shotTimer_ = 0;
 
 	Player* player_ = nullptr;
-
-	Vector3 worldPos;
 };
