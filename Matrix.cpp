@@ -255,3 +255,39 @@ Vector3 VectorAdd(const Vector3& translation, const Vector3& move) {
 	result.z = translation.z + move.z;
 	return result;
 }
+
+Vector3 VectorLerp(const Vector3& v1, const Vector3& v2, float t) 
+{
+	Vector3 result;
+
+	if (t < 0) 
+	{
+		t = (float)std::min(0, 1);
+	} else if (t > 1) {
+		t = (float)std::max(0, 1);
+	}
+
+	result.x = v1.x + t * (v2.x - v1.x);
+	result.y = v1.y + t * (v2.y - v1.y);
+	result.z = v1.z + t * (v2.z - v1.z);
+
+	return result;
+}
+
+Vector3 VectorSLerp(const Vector3& v1, const Vector3& v2, float t)
+{
+	Vector3 result;
+
+	float h = Dot(v1, v2);
+	float cosTheta = std::acos((h * (float)std::numbers::pi) / 180);
+	float sinTheta = std::sin(cosTheta);
+
+	float stert = std::sin((1 - t) * cosTheta) / sinTheta;
+	float end = std::sin(t * cosTheta) / sinTheta;
+
+	result.x = (stert * v1.x + end * v2.x);
+	result.y = (stert * v1.y + end * v2.y);
+	result.z = (stert * v1.z + end * v2.z);
+
+	return result;
+}
