@@ -43,26 +43,23 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-private: // メンバ変数
+private: 
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
 	uint32_t textureHandle_ = 0;
+
 	Model* model_ = nullptr;
 
-	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 
 	Player* player_ = nullptr;
 
 	Enemy* enemy_ = nullptr;
 
-	// デバッグカメラ有効
-	bool isDebugCameraActive_ = false;
-
 	DebugCamera* debugCamera_ = nullptr;
-
+	bool isDebugCameraActive_ = false;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

@@ -1,11 +1,16 @@
 #include "GameScene.h"
+#include "Affine.h"
 #include "AxisIndicator.h"
+#include "ImGuiManager.h"
+#include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include <cassert>
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {
+GameScene::~GameScene()
+{
+
 	delete model_;
 	delete player_;
 	delete debugCamera_;
@@ -20,58 +25,36 @@ void GameScene::Initialize() {
 
 	textureHandle_ = TextureManager::Load("sample.png");
 	model_ = Model::Create();
-
-	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
-	// 自キャラの生成
 	player_ = new Player();
-	// 自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
 
-	// 敵キャラの生成
 	enemy_ = new Enemy();
-	// 敵キャラの初期化
-	Vector3 position = {0, 0, 20};
 	enemy_->Initialize(model_);
 
-	// デバッグカメラの生成
-	debugCamera_ = new DebugCamera(50, 50);
-
-	// 軸方向表示の表示を有効にする
+	debugCamera_ = new DebugCamera(1280, 720);
 	AxisIndicator::GetInstance()->SetVisible(true);
-	// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 }
 
 void GameScene::Update() {
-	// 自キャラの更新
-	player_->Update();
-
-	// 敵キャラの更新
+	player_->Updete();
 	enemy_->Update();
 
-	debugCamera_->Update();
-
 #ifdef _DEBUG
-
-	if (input_->TriggerKey(DIK_RETURN)) {
+	if (input_->TriggerKey(DIK_0))
+	{
 		isDebugCameraActive_ = true;
 	}
-
 #endif
-
-	// カメラの処理
-	if (isDebugCameraActive_) {
-		// デバッグカメラの更新
+	if (isDebugCameraActive_) 
+	{
 		debugCamera_->Update();
-
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		// ビュープロジェクション行列の転送
+		viewProjection_.matView = debugCamera_->GetViewProjection().constMap->view;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().constMap->projection;
 		viewProjection_.TransferMatrix();
 	} else {
-		// ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
 	}
 }
@@ -102,11 +85,13 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	enemy_->Draw(viewProjection_);
-	player_->Draw(viewProjection_);
 
+	// 3Dモデルの描画
+	player_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
+
 #pragma endregion
 
 #pragma region 前景スプライト描画

@@ -1,36 +1,36 @@
-#pragma once
-#include "IEnemyState.h"
-#include "Matrix.h"
+﻿#pragma once
+#include "ImGuiManager.h"
 #include "Model.h"
+#include "IEnemyState.h"
+#include "PhaseApproach.h"
+#include "PhaseLeave.h"
 #include "WorldTransform.h"
-
-class IEnemyState;
+#include "WorldTransformEx.h"
 
 class Enemy {
 public:
-	Enemy();
-
-	~Enemy();
-
 	void Initialize(Model* model);
 
 	void Update();
 
-	void Draw(const ViewProjection& viewProjection);
+	void Draw(const ViewProjection viewProjection);
 
-	void Move(Vector3 speed);
+	Vector3 GetTransform() { return worldTransform_.translation_; }
 
-	void ChangePhase(IEnemyState* newState);
+	void ApproachMove();
+	void LeaveMove();
 
-	Vector3 GetTranslation() { return worldTransform_.translation_; };
-
-private:
-	static void (Enemy::*phasetable_[])();
+	void PhaseChange(IEnemyState* newState);
 
 private:
+
+	const float kEnemySpeedX_ = -0.3f;
+	const float kEnemySpeedY_ = 0.3f;
+	const float kEnemySpeedZ_ = -0.5f;
+
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
-
-	IEnemyState* phase_ = nullptr;
+	WorldTransformEx worldTransformEx_;
+	IEnemyState* state_;
 };

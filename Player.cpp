@@ -1,28 +1,24 @@
-#include "Player.h"
-#include "Matrix.h"
-#include "TextureManager.h"
-#include "ImGuiManager.h"
-#include "PrimitiveDrawer.h"
+﻿#include <Player.h>
 #include <cassert>
 
+Player::Player() {}
+
 Player::~Player() {
-	for (PlayerBullet* bullet : bullets_) {
-		delete bullet;
+	for (PlayerBullet* bullet_ : bullets_) {
+		delete bullet_;
 	}
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 	assert(model);
-
-	model_ = model;
 	textureHandle_ = textureHandle;
-
+	model_ = model;
 	worldTransform_.Initialize();
-
 	input_ = Input::GetInstance();
 }
 
-void Player::Update() { 
+void Player::Updete() {
+	// デスフラグが立った玉を削除
 	bullets_.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
@@ -30,40 +26,49 @@ void Player::Update() {
 		}
 		return false;
 	});
-	
-	worldTransform_.TransferMatrix();
 
+	Move();
+
+	Rotate();
+
+	Attack();
+
+	for (PlayerBullet* bullet_ : bullets_) {
+		bullet_->Update();
+	}
+
+	
+	worldTransformEx_.UpdateMatrix(
+	    worldTransform_, worldTransform_.scale_, worldTransform_.rotation_,
+	    worldTransform_.translation_);
+}
+
+void Player::Draw(const ViewProjection viewProjection_) {
+	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	for (PlayerBullet* bullet_ : bullets_) {
+		bullet_->Draw(viewProjection_);
+	}
+}
+
+// private関数
+
+void Player::Move() {
 	Vector3 move = {0, 0, 0};
 
-	const float kCharacterSpeed = 0.2f;
-
-	if (input_->PushKey(DIK_LEFT))
-	{
-		move.x -= kCharacterSpeed;
+	const float CharacterSpeed = 0.2f;
+	if (input_->PushKey(DIK_LEFT)) {
+		move.x -= CharacterSpeed;
 	} else if (input_->PushKey(DIK_RIGHT)) {
-		move.x += kCharacterSpeed;
+		move.x += CharacterSpeed;
 	}
-
 	if (input_->PushKey(DIK_UP)) {
-		move.y += kCharacterSpeed;
+		move.y += CharacterSpeed;
 	} else if (input_->PushKey(DIK_DOWN)) {
-		move.y -= kCharacterSpeed;
+		move.y -= CharacterSpeed;
 	}
 
-	float inputFloat3[3] = {move.x + 1, move.y + 1, move.z + 1};
-
-	ImGui::Begin("Player");
-	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 2.0f);
-	ImGui::Text("DebugCamera ENTER");
-	ImGui::Text("Shot SPACE");
-	ImGui::End();
-
-	move.x = inputFloat3[0] - 1;
-	move.y = inputFloat3[1] - 1;
-	move.z = inputFloat3[2] - 1;
-
-	const float kMoveLimitX = 34;
-	const float kMoveLimitY = 18;
+	const float kMoveLimitX = 30;
+	const float kMoveLimitY = 15;
 
 	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
 	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
@@ -71,50 +76,29 @@ void Player::Update() {
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
-	worldTransform_.matWorld_ = MakeAffineMatrix(
-	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	Rotate();
-
-	Attack();
-
-	for (PlayerBullet* bullet : bullets_)
-	{
-		bullet->Update();
-	}
 }
 
 void Player::Rotate() {
-	const float kRotSpeed = 0.02f;
+
+	const float RotSpeed = 0.02f;
 
 	if (input_->PushKey(DIK_A)) {
-		worldTransform_.rotation_.y -= kRotSpeed;
-
+		worldTransform_.rotation_.y -= RotSpeed;
 	} else if (input_->PushKey(DIK_D)) {
-		worldTransform_.rotation_.y += kRotSpeed;
+		worldTransform_.rotation_.y += RotSpeed;
 	}
 }
 
-void Player::Attack(){
-	if (input_->TriggerKey(DIK_SPACE))
-	{
+void Player::Attack() {
+	if (input_->TriggerKey(DIK_SPACE)) {
+
 		const float kBulletSpeed = 1.0f;
+		
 		Vector3 velocity(0, 0, kBulletSpeed);
-
+	
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
-
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
-
 		bullets_.push_back(newBullet);
-	}
-}
-
-void Player::Draw(ViewProjection viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-
-	for (PlayerBullet* bullet : bullets_)
-	{
-		bullet->Draw(viewProjection);
 	}
 }
