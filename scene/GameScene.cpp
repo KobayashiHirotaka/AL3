@@ -30,6 +30,8 @@ void GameScene::Initialize() {
 	enemy_ = new Enemy();
 	enemy_->Initialize(model_, textureHandle_);
 
+	collisionManager_ = new CollisionManager();
+
 	debugCamera_ = new DebugCamera(50, 50);
 
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -122,61 +124,20 @@ void GameScene::CheckAllCollisions()
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
 	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
 
-	std::list<Collider*> colliders_;
+	collisionManager_->AddCollider(player_);
 
-	colliders_.push_back(player_);
-
-	colliders_.push_back(enemy_);
+	collisionManager_->AddCollider(enemy_);
 
 	for (PlayerBullet* bullet : playerBullets)
 	{
-		colliders_.push_back(bullet);
+		collisionManager_->AddCollider(bullet);
 	}
 
 	for (EnemyBullet* bullet : enemyBullets) 
 	{
-		colliders_.push_back(bullet);
+		collisionManager_->AddCollider(bullet);
 	}
 
-	std::list<Collider*>::iterator itrA = colliders_.begin();
-
-	for (; itrA != colliders_.end(); ++itrA)
-	{
-		Collider* colliderA = *itrA;
-
-		std::list<Collider*>::iterator itrB = itrA;
-		itrB++;
-
-		for (; itrB != colliders_.end(); ++itrB)
-		{
-			Collider* colliderB = *itrB;
-			CheckCollisionPair(colliderA, colliderB);
-		}
-	}
-}
-
-void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) 
-{
-	Vector3 posA, posB;
-
-	posA = colliderA->GetWorldPosition();
-	posB = colliderB->GetWorldPosition();
-
-	float distance = sqrt(
-	    (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
-	    (posB.z - posA.z) * (posB.z - posA.z));
-
-	//衝突フィルタリング
-	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 || 
-		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0)
-	{
-		return;
-	}
-
-	// 球と球の交差判定
-	if (distance <= colliderA->GetRadius() + colliderB->GetRadius())
-	{
-		colliderA->OnCollision();
-		colliderB->OnCollision();
-	}
+	collisionManager_->CheckAllCollisions();
+	collisionManager_->ClearCollider();
 }
