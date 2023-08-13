@@ -9,6 +9,9 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "DebugCamera.h"
+#include"Skydome.h"
+#include "Ground.h"
 #include <memory>
 
 /// <summary>
@@ -54,6 +57,17 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 
 	std::unique_ptr<Player> player_;
+	std::unique_ptr<Model> playerModel_;
+
+	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+
+	bool isDebugActive_ = false;
+
+	std::unique_ptr<Skydome> skydome_;
+	std::unique_ptr<Model> skydomeModel_;
+
+	std::unique_ptr<Ground> ground_;
+	std::unique_ptr<Model> groundModel_;
 
 	/// <summary>
 	/// ゲームシーン用

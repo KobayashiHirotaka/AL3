@@ -1,17 +1,24 @@
 #include "Player.h"
+#include "ImGuiManager.h"
 #include <cassert>
 
-void Player::Initialize(Model* model, uint32_t textureHandle) {
+void Player::Initialize(Model* model)
+{
 	assert(model);
-
 	model_ = model;
-	textureHandle_ = textureHandle;
-
 	worldTransform_.Initialize();
 }
 
-void Player::Update() { worldTransform_.TransferMatrix(); }
+void Player::Update() 
+{ 
+	worldTransform_.UpdataMatrix();
 
-void Player::Draw(ViewProjection viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	ImGui::Begin("Player");
+	ImGui::Text("DebugCamera ENTER");
+	ImGui::End();
+}
+
+void Player::Draw(ViewProjection& viewProjection)
+{
+	model_->Draw(worldTransform_, viewProjection);
 }
