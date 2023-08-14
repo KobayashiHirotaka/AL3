@@ -10,6 +10,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugCamera.h"
+#include "FollowCamera.h"
 #include"Skydome.h"
 #include "Ground.h"
 #include <memory>
@@ -59,15 +60,17 @@ private: // メンバ変数
 	std::unique_ptr<Player> player_;
 	std::unique_ptr<Model> playerModel_;
 
-	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+	std::unique_ptr<DebugCamera> debugCamera_;
 
-	bool isDebugActive_ = false;
+	bool isDebugCameraActive_ = false;
 
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<Model> skydomeModel_;
 
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Model> groundModel_;
+
+	std::unique_ptr<FollowCamera> followCamera_;
 
 	/// <summary>
 	/// ゲームシーン用

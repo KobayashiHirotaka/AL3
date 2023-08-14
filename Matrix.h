@@ -9,6 +9,8 @@ Vector3 Add(const Vector3& v1, const Vector3& v2);
 
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 
+Vector3 Multiply(const float& v1, const Vector3& v2);
+
 Vector3 VectorScale(const Vector3& v1, const float& v2);
 
 float Dot(const Vector3& v1, const Vector3& v2);
@@ -36,3 +38,5 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 Vector3 VectorAdd(const Vector3& translation, const Vector3& move);
 
 Vector3 Normalize(const Vector3& v);
+
+Matrix4x4 Inverse(const Matrix4x4& m);

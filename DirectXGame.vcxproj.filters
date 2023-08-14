@@ -52,6 +52,33 @@
     <Filter Include="ソース ファイル\2d">
       <UniqueIdentifier>{814a0f6d-f847-4c45-856d-4688fa4c9e6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\player">
+      <UniqueIdentifier>{03939e51-8844-4e05-bd3c-e443be5963ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\player">
+      <UniqueIdentifier>{bab605fd-c03f-4c59-bd6f-df9603605b2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ground">
+      <UniqueIdentifier>{784db7f1-a3f8-4d26-ad65-563bd4a19c7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ground">
+      <UniqueIdentifier>{24b0f48d-17c4-48dc-927f-6941b36e1a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3d">
+      <UniqueIdentifier>{3d5808ea-2ecd-4200-bc91-67d1e53f8f81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\skydome">
+      <UniqueIdentifier>{577c7de6-18ba-4ea1-adbe-ca0110afe196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\skydome">
+      <UniqueIdentifier>{99539380-b25f-457d-853f-9a3727b9855e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\camera">
+      <UniqueIdentifier>{16a670b2-78ce-4244-98b6-93d6ed58e396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\camera">
+      <UniqueIdentifier>{ac482829-ef10-47af-9ced-e37ce7fa2624}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,13 +97,22 @@
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\player</Filter>
     </ClCompile>
-    <ClCompile Include="Skydome.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Ground.cpp">
+      <Filter>ソース ファイル\ground</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="WorldTransformEx.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Skydome.cpp">
+      <Filter>ソース ファイル\skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowCamera.cpp">
+      <Filter>ソース ファイル\camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,10 +201,19 @@
       <Filter>ヘッダー ファイル\2d</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>ヘッダー ファイル\ground</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
     <ClInclude Include="Skydome.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowCamera.h">
+      <Filter>ヘッダー ファイル\camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

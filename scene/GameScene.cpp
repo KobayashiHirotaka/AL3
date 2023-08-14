@@ -42,6 +42,11 @@ void GameScene::Initialize() {
 
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(groundModel_.get());
+
+	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Initialize({0.0f, 10.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
+
+	followCamera_->SetTarget(&player_->GetWorldTransform());
 }
 
 void GameScene::Update() 
@@ -56,18 +61,23 @@ void GameScene::Update()
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN))
 	{
-		isDebugActive_ = true;
+		isDebugCameraActive_ = true;
+	} else if (input_->TriggerKey(DIK_RETURN) && isDebugCameraActive_ == true) {
+		isDebugCameraActive_ = false;
 	}
 #endif 
 
-	if (isDebugActive_)
+	if (isDebugCameraActive_)
 	{
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	} else {
-		viewProjection_.UpdateMatrix();
+		followCamera_->Update();
+		viewProjection_.matView = followCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
 	}
 }
 
