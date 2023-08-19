@@ -53,6 +53,7 @@ void Player::Update()
 			BehaviorAttackInitialize();
 			break;
 		}
+
 		behaviorRequest_ = std::nullopt;
 	}
 
