@@ -44,9 +44,11 @@ void GameScene::Initialize() {
 	ground_->Initialize(groundModel_.get());
 
 	followCamera_ = std::make_unique<FollowCamera>();
-	followCamera_->Initialize({0.0f, 10.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
+	followCamera_->Initialize();
 
 	followCamera_->SetTarget(&player_->GetWorldTransform());
+
+	player_->SetViewProjection(&followCamera_->GetViewProjection());
 }
 
 void GameScene::Update() 
@@ -57,9 +59,6 @@ void GameScene::Update()
 	skydome_->Update();
 
 	ground_->Update();
-
-	followCamera_->Update();
-
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN))
