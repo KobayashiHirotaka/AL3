@@ -9,7 +9,8 @@ enum ModelParts
 	kModelIndexBody,
 	kModelIndexHead,
 	kModelIndexL_arm,
-	kModelIndexR_arm
+	kModelIndexR_arm,
+	kModelIndexHammer
 };
 
 class ICharacter 

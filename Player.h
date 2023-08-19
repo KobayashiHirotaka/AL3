@@ -2,6 +2,7 @@
 #include "Input.h"
 #include "Matrix.h"
 #include "ICharacter.h"
+#include <optional>
 
 class Player : public ICharacter
 {
@@ -26,7 +27,21 @@ public:
 
 	void FloatingGimmickUpdate();
 
+	void BehaviorRootInitialize();
+
+	void BehaviorRootUpdate();
+
+	void BehaviorAttackInitialize();
+
+	void BehaviorAttackUpdate();
+
 private:
+	enum class Behavior
+	{
+		kRoot,
+		kAttack
+	};
+
 	const ViewProjection* viewProjection_ = nullptr;
 
 	WorldTransform worldTransformBody_;
@@ -39,4 +54,12 @@ private:
 	XINPUT_STATE joyState_;
 
 	float floatingParameter_ = 0.0f;
+
+	Behavior behavior_ = Behavior::kRoot;
+
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
+
+	int attackAnimationFrame;
+
+	WorldTransform worldTransformHammer_;
 };
