@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include <cmath>
+#define _USE_MATH_DEFINES
 
 Vector3 Add(const Vector3& v1, const Vector3& v2);
 

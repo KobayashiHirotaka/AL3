@@ -22,11 +22,15 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	playerModel_.reset(Model::CreateFromOBJ("player", true));
+	modelFighterBody_.reset(Model::CreateFromOBJ("float_Body", true));
+	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head", true));
+	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
+	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
 
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	// 自キャラの初期化
-	player_->Initialize(playerModel_.get());
+	player_->Initialize(modelFighterBody_.get(),modelFighterHead_.get(),modelFighterL_arm_.get(),modelFighterR_arm_.get());
 
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 
@@ -46,7 +50,7 @@ void GameScene::Initialize() {
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->Initialize();
 
-	followCamera_->SetTarget(&player_->GetWorldTransform());
+	followCamera_->SetTarget(&player_->GetWorldTransformBase());
 
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 }
@@ -59,6 +63,8 @@ void GameScene::Update()
 	skydome_->Update();
 
 	ground_->Update();
+
+	viewProjection_.UpdateMatrix();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN))
