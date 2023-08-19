@@ -8,7 +8,7 @@ class Skydome
 public:
 	void Initialize(Model* model);
 
-	void Updata();
+	void Update();
 
 	void Draw(ViewProjection& viewProjection);
 

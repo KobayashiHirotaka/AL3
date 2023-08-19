@@ -9,9 +9,9 @@ void Ground::Initialize(Model* model)
 	worldTransform_.scale_ = {5.0f, 5.0f, 5.0f};
 }
 
-void Ground::Updata()
+void Ground::Update()
 { 
-	worldTransform_.UpdataMatrix();
+	worldTransform_.UpdateMatrix();
 }
 
 void Ground::Draw(ViewProjection& viewProjection)

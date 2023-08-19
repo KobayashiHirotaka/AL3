@@ -54,9 +54,12 @@ void GameScene::Update()
 	// 自キャラの更新
 	player_->Update();
 
-	skydome_->Updata();
+	skydome_->Update();
 
-	ground_->Updata();
+	ground_->Update();
+
+	followCamera_->Update();
+
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN))

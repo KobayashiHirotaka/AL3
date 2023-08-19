@@ -15,7 +15,7 @@ public:
 
 	void Draw(ViewProjection& viewProjection);
 
-	const Vector3 GetWorldTransform();
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
 private:
 	

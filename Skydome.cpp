@@ -9,9 +9,9 @@ void Skydome::Initialize(Model* model)
 	worldTransform_.scale_ = {100.0f, 100.0f, 100.0f};
 }
 
-void Skydome::Updata() 
+void Skydome::Update() 
 { 
-	worldTransform_.UpdataMatrix();
+	worldTransform_.UpdateMatrix();
 }
 
 void Skydome::Draw(ViewProjection& viewProjection)
