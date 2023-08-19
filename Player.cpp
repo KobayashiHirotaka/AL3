@@ -75,7 +75,8 @@ void Player::Update()
 	worldTransformR_arm_.UpdateMatrix();
 	worldTransformHammer_.UpdateMatrix();
 
-	ImGui::Begin("DebugCamera");
+	ImGui::Begin("Player");
+	ImGui::Text("Attack RightButtom");
 	ImGui::Text("DebugCamera ENTER");
 	ImGui::End();
 }
@@ -132,7 +133,7 @@ void Player::FloatingGimmickUpdate()
 	worldTransformL_arm_.rotation_.x = std::sin(floatingParameter_) * 0.75f;
 	worldTransformR_arm_.rotation_.x = std::sin(floatingParameter_) * 0.75f;
 
-	ImGui::Begin("Player");
+	ImGui::Begin("Model");
 	ImGui::DragFloat3("Head", &worldTransformHead_.translation_.x, 0.01f);
 	ImGui::DragFloat3("ArmL", &worldTransformL_arm_.translation_.x, 0.01f);
 	ImGui::DragFloat3("ArmR", &worldTransformR_arm_.translation_.x, 0.01f);
