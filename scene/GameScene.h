@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Model.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
@@ -77,7 +78,6 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelFighterL_arm_;
 	std::unique_ptr<Model> modelFighterR_arm_;
 
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
+	std::unique_ptr<Enemy> enemy_;
+	std::unique_ptr<Model> enemyModel_;
 };

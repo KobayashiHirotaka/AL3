@@ -1,21 +1,19 @@
 #pragma once
-#include "Model.h"
-#include "ViewProjection.h"
-#include "WorldTransform.h"
 #include "Input.h"
 #include "Matrix.h"
+#include "ICharacter.h"
 
-class Player
+class Player : public ICharacter
 {
 public:
 	
-	void Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, Model* modelR_arm);
+	void Initialize(const std::vector<Model*>& models)override;
 	
-	void Update();
+	void Update()override;
 
-	void Draw(ViewProjection& viewProjection);
+	void Draw(const ViewProjection& viewProjection)override;
 
-	const WorldTransform& GetWorldTransformBase() { return worldTransformBase_; }
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 	const WorldTransform& GetWorldTransformBody() { return worldTransformBody_; }
 
 	void SetViewProjection(const ViewProjection* viewProjection) { viewProjection_ = viewProjection; }
@@ -31,16 +29,12 @@ public:
 private:
 	const ViewProjection* viewProjection_ = nullptr;
 
-	WorldTransform worldTransformBase_;
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformL_arm_;
 	WorldTransform worldTransformR_arm_;
 
-	Model* modelBody_;
-	Model* modelHead_;
-	Model* modelL_arm_;
-	Model* modelR_arm_;
+	const uint16_t kMaxModelParts = 2;
 
 	XINPUT_STATE joyState_;
 

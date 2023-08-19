@@ -2,29 +2,28 @@
 #include "ImGuiManager.h"
 #include <cassert>
 
-void Player::Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, Model* modelR_arm)
+void Player::Initialize(const std::vector<Model*>& models)
 {
-	assert(modelBody);
-	assert(modelHead);
-	assert(modelL_arm);
-	assert(modelR_arm);
+	ICharacter::Initialize(models);
 
-	modelBody_ = modelBody;
-	modelHead_ = modelHead;
-	modelL_arm_ = modelL_arm;
-	modelR_arm_ = modelR_arm;
+	models_[kModelIndexBody] = models[kModelIndexBody];
+	models_[kModelIndexHead] = models[kModelIndexHead];
+	models_[kModelIndexL_arm] = models[kModelIndexL_arm];
+	models_[kModelIndexR_arm] = models[kModelIndexR_arm];
+	
 
 	worldTransformL_arm_.translation_.x = 1.5f;
-	worldTransformL_arm_.translation_.y = 5.0f;
+	worldTransformL_arm_.translation_.y = 4.5f;
 
 	worldTransformR_arm_.translation_.x = -1.5f;
-	worldTransformR_arm_.translation_.y = 5.0f;
+	worldTransformR_arm_.translation_.y = 4.5f;
 
 	SetParent(&GetWorldTransformBody());
+	worldTransformBody_.parent_ = worldTransform_.parent_;
 
 	FloatingGimmickInitialize();
 
-	worldTransformBase_.Initialize();
+	worldTransform_.Initialize();
 	worldTransformBody_.Initialize();
 	worldTransformHead_.Initialize();
 	worldTransformL_arm_.Initialize();
@@ -45,16 +44,16 @@ void Player::Update()
 
 		move = TransformNormal(move, cameraRotateMatrix);
 
-		worldTransformBase_.translation_ = Add(worldTransformBase_.translation_, move);
-		worldTransformBody_.translation_ = worldTransformBase_.translation_;
+		worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+		worldTransformBody_.translation_ = worldTransform_.translation_;
 
-		worldTransformBase_.rotation_.y = std::atan2(move.x, move.z);
-		worldTransformBody_.rotation_.y = worldTransformBase_.rotation_.y;
+		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+		worldTransformBody_.rotation_.y = worldTransform_.rotation_.y;
 	}
 
 	FloatingGimmickUpdate();
 
-	worldTransformBase_.UpdateMatrix();
+	ICharacter::Update();
 	worldTransformBody_.UpdateMatrix();
 	worldTransformHead_.UpdateMatrix();
 	worldTransformL_arm_.UpdateMatrix();
@@ -65,35 +64,34 @@ void Player::Update()
 	ImGui::End();
 }
 
-void Player::Draw(ViewProjection& viewProjection)
+void Player::Draw(const ViewProjection& viewProjection)
 {
-	modelBody_->Draw(worldTransformBody_, viewProjection);
-	modelHead_->Draw(worldTransformHead_, viewProjection);
-	modelL_arm_->Draw(worldTransformL_arm_, viewProjection);
-	modelR_arm_->Draw(worldTransformR_arm_, viewProjection);
+	models_[kModelIndexBody]->Draw(worldTransformBody_, viewProjection);
+	models_[kModelIndexHead]->Draw(worldTransformHead_, viewProjection);
+	models_[kModelIndexL_arm]->Draw(worldTransformL_arm_, viewProjection);
+	models_[kModelIndexR_arm]->Draw(worldTransformR_arm_, viewProjection);
 }
 
 Vector3 Player::GetWorldPosition()
 {
 	Vector3 worldPos;
 
-	worldPos.x = worldTransformBase_.matWorld_.m[3][0];
-	worldPos.y = worldTransformBase_.matWorld_.m[3][1];
-	worldPos.z = worldTransformBase_.matWorld_.m[3][2];
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
 
 	return worldPos;
 }
 
 void Player::SetParent(const WorldTransform* parent)
 {
-	worldTransformBase_.parent_ = parent;
 	worldTransformHead_.parent_ = parent;
 	worldTransformL_arm_.parent_ = parent;
 	worldTransformR_arm_.parent_ = parent;
 }
 
 void Player::FloatingGimmickInitialize()
-{
+{ 
 	floatingParameter_ = 0.0f;
 }
 

@@ -27,10 +27,20 @@ void GameScene::Initialize() {
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
 
+	enemyModel_.reset(Model::CreateFromOBJ("Enemy", true));
+
+	std::vector<Model*> playerModels = { modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(),
+	    modelFighterR_arm_.get()};
+
+	std::vector<Model*> enemyModels = {enemyModel_.get()};
+
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	// 自キャラの初期化
-	player_->Initialize(modelFighterBody_.get(),modelFighterHead_.get(),modelFighterL_arm_.get(),modelFighterR_arm_.get());
+	player_->Initialize(playerModels);
+
+	enemy_ = std::make_unique<Enemy>();
+	enemy_->Initialize(enemyModels);
 
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 
@@ -50,7 +60,7 @@ void GameScene::Initialize() {
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->Initialize();
 
-	followCamera_->SetTarget(&player_->GetWorldTransformBase());
+	followCamera_->SetTarget(&player_->GetWorldTransform());
 
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 }
@@ -59,6 +69,8 @@ void GameScene::Update()
 {
 	// 自キャラの更新
 	player_->Update();
+
+	enemy_->Update();
 
 	skydome_->Update();
 
@@ -116,6 +128,8 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	player_->Draw(viewProjection_);
+
+	enemy_->Draw(viewProjection_);
 
 	skydome_->Draw(viewProjection_);
 
