@@ -22,6 +22,15 @@ void Player::Initialize(const std::vector<Model*>& models)
 	worldTransformL_arm_.Initialize();
 	worldTransformR_arm_.Initialize();
 	worldTransformHammer_.Initialize();
+
+	float s = 10;
+	GlobalVariables* globalVariables{};
+	globalVariables = GlobalVariables::GetInstance();
+
+	const char* groupName = "Player";
+
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+	globalVariables->SetValue(groupName, "Test", s);
 }
 
 void Player::Update() 

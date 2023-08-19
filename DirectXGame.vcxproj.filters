@@ -79,6 +79,24 @@
     <Filter Include="ソース ファイル\camera">
       <UniqueIdentifier>{ac482829-ef10-47af-9ced-e37ce7fa2624}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\enemy">
+      <UniqueIdentifier>{75eb9f7b-cb9d-401a-8bde-4acfc2174c84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Icharacter">
+      <UniqueIdentifier>{5981fa53-7046-4a79-992e-e53bdedad346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Icharacter">
+      <UniqueIdentifier>{dd8326d9-3fa0-4c02-bd2c-1120caccc9fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enemy">
+      <UniqueIdentifier>{169045d6-6400-423c-be5d-d4c99904a957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\globalvariables">
+      <UniqueIdentifier>{5ca2bb2f-8c4a-46ae-9847-929ff5d825f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\globalvariables">
+      <UniqueIdentifier>{fff48ba9-603a-4cc6-8e86-fa8c384b3f14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -114,11 +132,14 @@
     <ClCompile Include="FollowCamera.cpp">
       <Filter>ソース ファイル\camera</Filter>
     </ClCompile>
-    <ClCompile Include="ICharacter.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalVariables.cpp">
+      <Filter>ソース ファイル\globalvariables</Filter>
+    </ClCompile>
+    <ClCompile Include="ICharacter.cpp">
+      <Filter>ソース ファイル\Icharacter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -222,10 +243,13 @@
       <Filter>ヘッダー ファイル\camera</Filter>
     </ClInclude>
     <ClInclude Include="ICharacter.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Icharacter</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalVariables.h">
+      <Filter>ヘッダー ファイル\globalvariables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
