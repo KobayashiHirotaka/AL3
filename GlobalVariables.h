@@ -4,6 +4,10 @@
 #include <variant>
 #include <map>
 #include <string>
+#include <json.hpp>
+#include <fstream>
+
+using json = nlohmann::json;
 
 class GlobalVariables
 {
@@ -19,6 +23,8 @@ public:
 	void SetValue(const std::string& groupName, const std::string& key, Vector3& value);
 
 	void CreateGroup(const std::string& groupName);
+
+	void SaveFile(const std::string& groupName);
 
 public:
 	struct Item
@@ -41,4 +47,6 @@ private:
 	GlobalVariables(const GlobalVariables& obj) = default;
 
 	GlobalVariables& operator=(const GlobalVariables& obj) = default;
+
+	const std::string kDirectoryPath = "Resources/GlobalVariables/";
 };

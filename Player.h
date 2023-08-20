@@ -62,4 +62,5 @@ private:
 	int attackAnimationFrame;
 
 	WorldTransform worldTransformHammer_;
+
 };
