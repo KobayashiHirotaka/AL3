@@ -24,14 +24,18 @@ void Player::Initialize(const std::vector<Model*>& models)
 	worldTransformR_arm_.Initialize();
 	worldTransformHammer_.Initialize();
 
-	float s = 10;
 	GlobalVariables* globalVariables{};
 	globalVariables = GlobalVariables::GetInstance();
 
 	const char* groupName = "Player";
 
 	GlobalVariables::GetInstance()->CreateGroup(groupName);
-	globalVariables->SetValue(groupName, "Test", s);
+	globalVariables->AddItem(groupName, "Head Translation", worldTransformHead_.translation_);
+	globalVariables->AddItem(groupName, "ArmL Translation", worldTransformL_arm_.translation_);
+	globalVariables->AddItem(groupName, "ArmR Translation", worldTransformR_arm_.translation_);
+	globalVariables->AddItem(groupName, "floatingCycle_Arms", floatingCycle_[0]);
+	globalVariables->AddItem(groupName, "floatingCycleBody", floatingCycle_[1]);
+	globalVariables->AddItem(groupName, "floatingAmplitude", floatingAmplitude_);
 }
 
 void Player::Update() 
@@ -124,24 +128,32 @@ void Player::SetParent(const WorldTransform* parent)
 
 void Player::FloatingGimmickInitialize()
 { 
-	floatingParameter_ = 0.0f;
+	for (int i = 0; i < kMaxModelParts; i++)
+	{
+		floatingParameter_[i] = 0.0f;
+	}
 }
 
 void Player::FloatingGimmickUpdate()
 {
-	const uint16_t T = 120;
+	floatingCycle_[0] = 120;
+	floatingCycle_[1] = 120;
+	
+	float step[2]{};
 
-	const float step = 2.0f * (float)M_PI / T;
+	for (int i = 0; i < kMaxModelParts; i++) 
+	{
+		step[i] = 2.0f * (float)M_PI / floatingCycle_[i];
+		
+		floatingParameter_[i] += step[i];
+	
+		floatingParameter_[i] = (float)std::fmod(floatingParameter_[i], 2.0f * M_PI);
+	}
 
-	floatingParameter_ += step;
-	floatingParameter_ = (float)std::fmod(floatingParameter_, 2.0f * M_PI);
+	worldTransformBody_.translation_.y = std::sin(floatingParameter_[0]) * floatingAmplitude_;
 
-	const float floatingAmplitude = 1.0f;
-
-	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * floatingAmplitude;
-
-	worldTransformL_arm_.rotation_.x = std::sin(floatingParameter_) * 0.75f;
-	worldTransformR_arm_.rotation_.x = std::sin(floatingParameter_) * 0.75f;
+	worldTransformL_arm_.rotation_.x = std::sin(floatingParameter_[1]) * 0.75f;
+	worldTransformR_arm_.rotation_.x = -std::sin(floatingParameter_[1]) * 0.75f;
 
 	ImGui::Begin("Model");
 	ImGui::DragFloat3("Head", &worldTransformHead_.translation_.x, 0.01f);
@@ -218,4 +230,24 @@ void Player::BehaviorAttackUpdate()
 		behaviorRequest_ = Behavior::kRoot;
 	}
 	attackAnimationFrame++;
+}
+
+void Player::ApplyGlobalVariables()
+{
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+
+	const char* groupName = "Player";
+
+	worldTransformHead_.translation_ =
+	    globalVariables->GetVector3Value(groupName, "Head Translation");
+
+	worldTransformL_arm_.translation_ =
+	    globalVariables->GetVector3Value(groupName, "ArmL Translation");
+
+	worldTransformR_arm_.translation_ =
+	    globalVariables->GetVector3Value(groupName, "ArmR Translation");
+
+	floatingCycle_[0] = globalVariables->GetIntValue(groupName, "floatingCycle_Arms");
+	floatingCycle_[1] = globalVariables->GetIntValue(groupName, "floatingCycleBody");
+	floatingAmplitude_ = globalVariables->GetFloatValue(groupName, "floatingAmplitude");
 }

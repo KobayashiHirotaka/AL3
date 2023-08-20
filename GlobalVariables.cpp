@@ -7,6 +7,39 @@ GlobalVariables* GlobalVariables::GetInstance()
 	return &instance;
 }
 
+int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::string& key)
+{
+	assert(datas_.find(groupName) != datas_.end());
+
+	Group& group = datas_[groupName];
+
+	assert(group.items.find(key) != group.items.end());
+
+	return std::get<int32_t>(group.items[key].value);
+}
+
+float GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key)
+{
+	assert(datas_.find(groupName) != datas_.end());
+
+	Group& group = datas_[groupName];
+
+	assert(group.items.find(key) != group.items.end());
+
+	return std::get<float>(group.items[key].value);
+}
+
+Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key)
+{
+	assert(datas_.find(groupName) != datas_.end());
+
+	Group& group = datas_[groupName];
+
+	assert(group.items.find(key) != group.items.end());
+
+	return std::get<Vector3>(group.items[key].value);
+}
+
 void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, int32_t value)
 {
 	Group& group = datas_[groupName];
@@ -149,4 +182,108 @@ void GlobalVariables::SaveFile(const std::string& groupName)
 
 	ofs << std::setw(4) << root << std::endl;
 	ofs.close();
+}
+
+void GlobalVariables::LoadFiles() 
+{
+	std::filesystem::path dir(kDirectoryPath);
+	if (!std::filesystem::exists(kDirectoryPath))
+	{
+		return;
+	}
+
+	std::filesystem::directory_iterator dir_it(kDirectoryPath);
+	for (const std::filesystem::directory_entry& entry : dir_it) 
+	{
+		const std::filesystem::path& filePath = entry.path();
+
+		std::string extension = filePath.extension().string();
+		
+		if (extension.compare(".json") != 0)
+		{
+			continue;
+		}
+	
+		LoadFile(filePath.stem().string());
+	}
+}
+
+void GlobalVariables::LoadFile(const std::string& groupName)
+{
+	
+	std::string filePath = kDirectoryPath + groupName + ".json";
+
+	std::ifstream ifs;
+	
+	ifs.open(filePath);
+
+	if (ifs.fail()) 
+	{
+		std::string message = "Failed open data file for write.";
+		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		assert(0);
+		return;
+	}
+
+	nlohmann::json root;
+
+	ifs >> root;
+
+	ifs.close();
+
+	nlohmann::json::iterator itGroup = root.find(groupName);
+
+	assert(itGroup != root.end());
+
+	for (nlohmann::json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) 
+	{
+		const std::string& itemName = itItem.key();
+
+		if (itItem->is_number_integer()) 
+		{
+		
+			int32_t value = itItem->get<int32_t>();
+			SetValue(groupName, itemName, value);
+
+		}else if (itItem->is_number_float()){
+		
+			double value = itItem->get<double>();
+			SetValue(groupName, itemName, static_cast<float>(value));
+
+		}else if (itItem->is_array() && itItem->size() == 3){
+		
+			Vector3 value = {itItem->at(0), itItem->at(1), itItem->at(2)};
+			SetValue(groupName, itemName, value);
+		}
+	}
+}
+
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, int32_t value)
+{
+	Group& group = datas_[groupName];
+
+	if (group.items.find(key) == group.items.end()) 
+	{
+		SetValue(groupName, key, value);
+	}
+}
+
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, float value) 
+{
+	Group& group = datas_[groupName];
+
+	if (group.items.find(key) == group.items.end())
+	{
+		SetValue(groupName, key, value);
+	}
+}
+
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, Vector3& value)
+{
+	Group& group = datas_[groupName];
+	
+	if (group.items.find(key) == group.items.end())
+	{
+		SetValue(groupName, key, value);
+	}
 }

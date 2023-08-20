@@ -2,6 +2,7 @@
 #include "Input.h"
 #include "Matrix.h"
 #include "ICharacter.h"
+#include "GlobalVariables.h"
 #include <optional>
 
 class Player : public ICharacter
@@ -35,6 +36,8 @@ public:
 
 	void BehaviorAttackUpdate();
 
+	void ApplyGlobalVariables();
+
 private:
 	enum class Behavior
 	{
@@ -53,7 +56,11 @@ private:
 
 	XINPUT_STATE joyState_;
 
-	float floatingParameter_ = 0.0f;
+	float floatingParameter_[2];
+
+	int floatingCycle_[2];
+
+	float floatingAmplitude_;
 
 	Behavior behavior_ = Behavior::kRoot;
 
@@ -62,5 +69,4 @@ private:
 	int attackAnimationFrame;
 
 	WorldTransform worldTransformHammer_;
-
 };
