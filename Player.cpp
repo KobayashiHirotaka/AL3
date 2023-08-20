@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "ImGuiManager.h"
+#include "GlobalVariables.h"
 #include <cassert>
 
 void Player::Initialize(const std::vector<Model*>& models)

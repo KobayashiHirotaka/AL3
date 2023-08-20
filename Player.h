@@ -2,7 +2,6 @@
 #include "Input.h"
 #include "Matrix.h"
 #include "ICharacter.h"
-#include "GlobalVariables.h"
 #include <optional>
 
 class Player : public ICharacter
