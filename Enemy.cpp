@@ -5,6 +5,7 @@ void Enemy::Initialize(const std::vector<Model*>& models)
 {
 	ICharacter::Initialize(models);
 
+	//worldTransform_.rotation_.y = 182.5f;
 	worldTransform_.translation_.x = 30.0f;
 	worldTransform_.translation_.z = 30.0f;
 }
@@ -12,8 +13,8 @@ void Enemy::Initialize(const std::vector<Model*>& models)
 void Enemy::Update()
 {
 	attackTimer_--;
-	const float kEnemySpeed = 0.3f;
-	Vector3 velocity{0.0f, 0.0f, kEnemySpeed};
+	const float kEnemySpeed = -0.3f;
+	Vector3 velocity{kEnemySpeed, 0.0f, 0.0f};
 
 	//Vector3 playerWorldPos = player_->GetWorldPosition();
 	//
@@ -35,13 +36,15 @@ void Enemy::Update()
 	//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
-	worldTransform_.rotation_.y += 0.03f;
+	/*worldTransform_.rotation_.y += 0.03f;
+	worldTransform_.translation_.z = 30.0f;*/
 
-	if (attackTimer_ <= 0)
+
+	/*if (attackTimer_ <= 0)
 	{
 		worldTransform_.rotation_.y = 0.0f;
 		worldTransform_.translation_.x += 0.03f;
-	}
+	}*/
 
 	ICharacter::Update();
 
