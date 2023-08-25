@@ -124,6 +124,7 @@ void Player::SetParent(const WorldTransform* parent)
 	worldTransformHead_.parent_ = parent;
 	worldTransformL_arm_.parent_ = parent;
 	worldTransformR_arm_.parent_ = parent;
+	worldTransformHammer_.parent_ = parent;
 }
 
 void Player::FloatingGimmickInitialize()

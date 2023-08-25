@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Matrix.h"
+#include "Player.h"
 
 class Enemy : public ICharacter 
 {
@@ -12,4 +13,11 @@ public:
 	void Update()override;
 
 	void Draw(const ViewProjection& viewProjection) override;
+
+	Vector3 GetWorldPosition();
+
+private:
+	int attackTimer_ = 120;
+
+	Player* player_ = nullptr;
 };
