@@ -35,7 +35,24 @@ void Enemy::Update()
 
 	//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
+	if (moveCount == 0 && worldTransform_.translation_.x > 0)
+	{
+		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
+		if (worldTransform_.translation_.x <= 0)
+		{
+			moveCount = 1;
+		}
+	}
+
+	if (moveCount == 1 && worldTransform_.translation_.x < 35)
+	{
+		worldTransform_.translation_ = Subtract(worldTransform_.translation_, velocity);
+		if (worldTransform_.translation_.x >= 35) 
+		{
+			moveCount = 0;
+		}
+	}
+	
 	/*worldTransform_.rotation_.y += 0.03f;
 	worldTransform_.translation_.z = 30.0f;*/
 
@@ -50,6 +67,8 @@ void Enemy::Update()
 
 	ImGui::Begin("Enemy");
 	ImGui::Text("attackTimer %d", attackTimer_);
+	ImGui::Text("attackTimer %f", worldTransform_.translation_.x);
+	ImGui::Text("attackTimer %d", moveCount);
 	ImGui::End();
 }
 

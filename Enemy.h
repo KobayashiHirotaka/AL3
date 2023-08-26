@@ -19,5 +19,7 @@ public:
 private:
 	int attackTimer_ = 120;
 
+	int moveCount = 0;
+
 	Player* player_ = nullptr;
 };
