@@ -16,29 +16,10 @@ void Enemy::Update()
 	const float kEnemySpeed = -0.3f;
 	Vector3 velocity{kEnemySpeed, 0.0f, 0.0f};
 
-	//Vector3 playerWorldPos = player_->GetWorldPosition();
-	//
-	//GetWorldPosition();
-	//
-	//Vector3 diffVector;
-
-	//diffVector = Subtract(playerWorldPos, worldPos);
-	//// ベクトルの正規化
-	//Vector3 normalizeDiffVector;
-
-	//normalizeDiffVector = Normalize(diffVector);
-
-	//// ベクトルの長さを速さに合わせる
-	//velocity = VectorScale(normalizeDiffVector, kBulletSpeed);
-
-	//velocity = TransformNormal(velocity, worldTransform_.matWorld_)
-
-	//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
-
-	if (moveCount == 0 && worldTransform_.translation_.x > 0)
+	if (moveCount == 0 && worldTransform_.translation_.x > -35)
 	{
 		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
-		if (worldTransform_.translation_.x <= 0)
+		if (worldTransform_.translation_.x <= -35)
 		{
 			moveCount = 1;
 		}
@@ -53,15 +34,6 @@ void Enemy::Update()
 		}
 	}
 	
-	/*worldTransform_.rotation_.y += 0.03f;
-	worldTransform_.translation_.z = 30.0f;*/
-
-
-	/*if (attackTimer_ <= 0)
-	{
-		worldTransform_.rotation_.y = 0.0f;
-		worldTransform_.translation_.x += 0.03f;
-	}*/
 
 	ICharacter::Update();
 

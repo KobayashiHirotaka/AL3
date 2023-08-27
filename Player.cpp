@@ -7,6 +7,8 @@ void Player::Initialize(const std::vector<Model*>& models)
 {
 	ICharacter::Initialize(models);
 
+	worldTransform_.translation_ = {0.0f, 0.0f, -30.0f};
+
 	worldTransformL_arm_.translation_.x = 1.5f;
 	worldTransformL_arm_.translation_.y = 4.5f;
 
