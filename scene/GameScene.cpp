@@ -88,20 +88,23 @@ void GameScene::Update()
 		break;
 
 	case Scene::play:
+		skydome_->Update();
+
+		ground_->Update();
 		// 自キャラの更新
 		player_->Update();
 
 		enemy_->Update();
+
+		viewProjection_.UpdateMatrix();
 		break;
 
 	case Scene::end:
 		ImGui::Begin("END");
 		ImGui::Text("Clear");
 		ImGui::End();
+		break;
 	}
-
-
-	viewProjection_.UpdateMatrix();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_RETURN))
@@ -152,13 +155,29 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	player_->Draw(viewProjection_);
+	
+	switch (scene_)
+	{
+	case Scene::start:
+	default:
+		skydome_->Draw(viewProjection_);
 
-	enemy_->Draw(viewProjection_);
+		ground_->Draw(viewProjection_);
+		break;
 
-	skydome_->Draw(viewProjection_);
+	case Scene::play:
+		skydome_->Draw(viewProjection_);
 
-	ground_->Draw(viewProjection_);
+		ground_->Draw(viewProjection_);
+
+		player_->Draw(viewProjection_);
+
+		enemy_->Draw(viewProjection_);
+		break;
+
+	case Scene::end:
+		break;
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
