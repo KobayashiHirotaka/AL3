@@ -81,4 +81,15 @@ private: // メンバ変数
 
 	std::unique_ptr<Enemy> enemy_;
 	std::unique_ptr<Model> enemyModel_;
+
+	enum class Scene
+	{ 
+		start, 
+		play,
+		end
+	};
+
+	Scene scene_ = Scene::start;
+
+	XINPUT_STATE joyState_;
 };

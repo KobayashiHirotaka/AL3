@@ -68,14 +68,38 @@ void GameScene::Initialize() {
 
 void GameScene::Update() 
 {
-	// 自キャラの更新
-	player_->Update();
+	if (input_->TriggerKey(DIK_1))
+	{
+		scene_ = Scene::play;
+	}
 
-	enemy_->Update();
+	if (scene_ == Scene::play && input_->TriggerKey(DIK_2))
+	{
+		scene_ = Scene::end;
+	}
 
-	skydome_->Update();
+	switch (scene_)
+	{ 
+	case Scene::start:
+	default:
+		skydome_->Update();
 
-	ground_->Update();
+		ground_->Update();
+		break;
+
+	case Scene::play:
+		// 自キャラの更新
+		player_->Update();
+
+		enemy_->Update();
+		break;
+
+	case Scene::end:
+		ImGui::Begin("END");
+		ImGui::Text("Clear");
+		ImGui::End();
+	}
+
 
 	viewProjection_.UpdateMatrix();
 
