@@ -15,6 +15,8 @@ void Player::Initialize(const std::vector<Model*>& models)
 	worldTransformR_arm_.translation_.x = -1.5f;
 	worldTransformR_arm_.translation_.y = 4.5f;
 
+	worldTransformHammer_.translation_.z = -1.5f;
+
 	SetParent(&GetWorldTransformBody());
 	worldTransformBody_.parent_ = worldTransform_.parent_;
 
