@@ -5,7 +5,6 @@ void Enemy::Initialize(const std::vector<Model*>& models)
 {
 	ICharacter::Initialize(models);
 
-	//worldTransform_.rotation_.y = 182.5f;
 	worldTransform_.translation_.x = 30.0f;
 	worldTransform_.translation_.z = 30.0f;
 }
@@ -13,44 +12,77 @@ void Enemy::Initialize(const std::vector<Model*>& models)
 void Enemy::Update()
 {
 	attackTimer_--;
-	const float kEnemySpeed = -0.3f;
-	Vector3 velocity{kEnemySpeed, 0.0f, 0.0f};
 
-	if (moveCount == 0 && worldTransform_.translation_.x > -35)
+	if (moveCount == 0)
 	{
-		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity);
+		worldTransform_.translation_.x -= 0.5f;
 		if (worldTransform_.translation_.x <= -35)
 		{
 			moveCount = 1;
 		}
+
+		if (attackTimer_ <= 0 && worldTransform_.translation_.z > -70)
+		{
+			moveCount = 2;
+		}
+
+		if (attackTimer_ <= 0 && worldTransform_.translation_.z < -70) 
+		{
+			moveCount = 3;
+		}
 	}
 
-	if (moveCount == 1 && worldTransform_.translation_.x < 35)
+	if (moveCount == 1)
 	{
-		worldTransform_.translation_ = Subtract(worldTransform_.translation_, velocity);
+		worldTransform_.translation_.x += 0.5f;
 		if (worldTransform_.translation_.x >= 35) 
 		{
 			moveCount = 0;
 		}
-	}
 
-	if (attackTimer_ <= 0 && worldTransform_.translation_.z>=-70)
-	{
-		moveCount = 2;
-		worldTransform_.translation_.z -= 0.3f;
-		if (worldTransform_.translation_.z <= -70)
+		if (attackTimer_ <= 0 && worldTransform_.translation_.z > -70)
 		{
-			worldTransform_.rotation_.y += 1.3f;
-			moveCount = 0;
+			moveCount = 2;
+		}
+
+		if (attackTimer_ <= 0 && worldTransform_.translation_.z < -70)
+		{
+			moveCount = 3;
 		}
 	}
-	
+
+	if (moveCount == 2)
+	{
+		worldTransform_.translation_.z -= 0.8f;
+		worldTransform_.rotation_.y += 0.2f;
+
+		if (worldTransform_.translation_.z <= -70) 
+		{
+			worldTransform_.rotation_.y = 3.2f;
+			moveCount = 0;
+			attackTimer_ = 240;
+		}
+	}
+
+	if (moveCount == 3)
+	{
+		worldTransform_.translation_.z += 0.8f;
+		worldTransform_.rotation_.y -= 0.2f;
+
+		if (worldTransform_.translation_.z >= 30)
+		{
+			worldTransform_.rotation_.y = 6.4f;
+			moveCount = 0;
+			attackTimer_ = 240;
+		}
+	}
+
 
 	ICharacter::Update();
 
 	ImGui::Begin("Enemy");
 	ImGui::Text("attackTimer %d", attackTimer_);
-	ImGui::Text("WTX %f", worldTransform_.translation_.x);
+	ImGui::Text("WTX %f", worldTransform_.translation_.z);
 	ImGui::Text("count %d", moveCount);
 	ImGui::End();
 }

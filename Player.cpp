@@ -51,7 +51,7 @@ void Player::Update()
 		return;
 	}
 
-	if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) 
+	if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
 	{
 		behaviorRequest_ = Behavior::kAttack;
 	}
@@ -187,7 +187,7 @@ void Player::BehaviorRootUpdate()
 {
 	if (Input::GetInstance()->GetJoystickState(0, joyState_))
 	{
-		const float kPlayerSpeed = 0.2f;
+		const float kPlayerSpeed = 0.5f;
 
 		Vector3 move = {
 		    (float)joyState_.Gamepad.sThumbLX / SHRT_MAX, 0.0f,
