@@ -75,6 +75,11 @@ void GameScene::Update()
 
 	if (scene_ == Scene::play && input_->TriggerKey(DIK_2))
 	{
+		scene_ = Scene::clear;
+	}
+
+	if (scene_ == Scene::play && input_->TriggerKey(DIK_3))
+	{
 		scene_ = Scene::end;
 	}
 
@@ -97,6 +102,11 @@ void GameScene::Update()
 		enemy_->Update();
 
 		viewProjection_.UpdateMatrix();
+
+		CheckAllCollisions();
+		break;
+
+	case Scene::clear:
 		break;
 
 	case Scene::end:
@@ -175,7 +185,16 @@ void GameScene::Draw() {
 		enemy_->Draw(viewProjection_);
 		break;
 
+	case Scene::clear:
+		skydome_->Draw(viewProjection_);
+
+		ground_->Draw(viewProjection_);
+		break;
+
 	case Scene::end:
+		skydome_->Draw(viewProjection_);
+
+		ground_->Draw(viewProjection_);
 		break;
 	}
 
@@ -195,4 +214,25 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckAllCollisions()
+{
+	Vector3 posA, posB;
+	float PlayerRadius = 3.0f;
+	float EnemyRadius = 8.0f;
+
+	posA = player_->GetWorldPosition();
+	posB = enemy_->GetWorldPosition();
+
+	Vector3 distance = {
+	    (posB.x - posA.x) * (posB.x - posA.x), (posB.y - posA.y) * (posB.y - posA.y),
+	    (posB.z - posA.z) * (posB.z - posA.z)};
+
+	if (distance.x + distance.y + distance.z <=
+	    (PlayerRadius + EnemyRadius) * (PlayerRadius + EnemyRadius)) {
+		player_->OnCollision();
+
+		enemy_->OnCollision();
+	}
 }

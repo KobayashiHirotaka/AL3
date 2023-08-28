@@ -38,6 +38,8 @@ public:
 
 	void ApplyGlobalVariables();
 
+	void OnCollision();
+
 private:
 	enum class Behavior
 	{
@@ -69,4 +71,6 @@ private:
 	int attackAnimationFrame;
 
 	WorldTransform worldTransformHammer_;
+
+	float hp = 3.0f;
 };

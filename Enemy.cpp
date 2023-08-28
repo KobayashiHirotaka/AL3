@@ -33,14 +33,25 @@ void Enemy::Update()
 			moveCount = 0;
 		}
 	}
+
+	if (attackTimer_ <= 0 && worldTransform_.translation_.z>=-70)
+	{
+		moveCount = 2;
+		worldTransform_.translation_.z -= 0.3f;
+		if (worldTransform_.translation_.z <= -70)
+		{
+			worldTransform_.rotation_.y += 1.3f;
+			moveCount = 0;
+		}
+	}
 	
 
 	ICharacter::Update();
 
 	ImGui::Begin("Enemy");
 	ImGui::Text("attackTimer %d", attackTimer_);
-	ImGui::Text("attackTimer %f", worldTransform_.translation_.x);
-	ImGui::Text("attackTimer %d", moveCount);
+	ImGui::Text("WTX %f", worldTransform_.translation_.x);
+	ImGui::Text("count %d", moveCount);
 	ImGui::End();
 }
 
@@ -53,9 +64,14 @@ Vector3 Enemy::GetWorldPosition()
 {
 	Vector3 worldPos;
 
-	worldPos.x = worldTransform_.matWorld_.m[3][0];
-	worldPos.y = worldTransform_.matWorld_.m[3][1];
-	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
+}
+
+void Enemy::OnCollision()
+{
+
 }

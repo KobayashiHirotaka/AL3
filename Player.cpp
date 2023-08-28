@@ -96,6 +96,7 @@ void Player::Update()
 	ImGui::Begin("Player");
 	ImGui::Text("Attack RightButtom");
 	ImGui::Text("DebugCamera ENTER");
+	ImGui::Text("hp %f",hp);
 	ImGui::End();
 }
 
@@ -116,9 +117,9 @@ Vector3 Player::GetWorldPosition()
 {
 	Vector3 worldPos;
 
-	worldPos.x = worldTransform_.matWorld_.m[3][0];
-	worldPos.y = worldTransform_.matWorld_.m[3][1];
-	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
 }
@@ -255,4 +256,9 @@ void Player::ApplyGlobalVariables()
 	floatingCycle_[0] = globalVariables->GetIntValue(groupName, "floatingCycle_Arms");
 	floatingCycle_[1] = globalVariables->GetIntValue(groupName, "floatingCycleBody");
 	floatingAmplitude_ = globalVariables->GetFloatValue(groupName, "floatingAmplitude");
+}
+
+void Player::OnCollision()
+{ 
+	hp -= 0.01f;
 }
