@@ -23,7 +23,7 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head", true));
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
-	modelFighterHammer_.reset(Model::CreateFromOBJ("hammer", true));
+	/*modelFighterHammer_.reset(Model::CreateFromOBJ("hammer", true));*/
 
 	enemyModel_.reset(Model::CreateFromOBJ("Enemy", true));
 
@@ -202,7 +202,7 @@ void GameScene::Draw() {
 	Model::PostDraw();
 #pragma endregion
 
-#pragma region 前景スプライト描画
+#pragma region 前景スプライト描画	
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
@@ -220,7 +220,9 @@ void GameScene::CheckAllCollisions()
 {
 	Vector3 posA, posB;
 	float PlayerRadius = 3.0f;
-	float EnemyRadius = 8.0f;
+	float EnemyRadius = 10.0f;
+
+	#pragma region 自キャラと敵キャラ
 
 	posA = player_->GetWorldPosition();
 	posB = enemy_->GetWorldPosition();
@@ -229,10 +231,11 @@ void GameScene::CheckAllCollisions()
 	    (posB.x - posA.x) * (posB.x - posA.x), (posB.y - posA.y) * (posB.y - posA.y),
 	    (posB.z - posA.z) * (posB.z - posA.z)};
 
-	if (distance.x + distance.y + distance.z <=
-	    (PlayerRadius + EnemyRadius) * (PlayerRadius + EnemyRadius)) {
+	if (distance.x + distance.y + distance.z -5.0f <=
+	    (PlayerRadius + EnemyRadius) * (PlayerRadius + EnemyRadius))
+	{
 		player_->OnCollision();
-
-		enemy_->OnCollision();
 	}
+
+	#pragma endregion
 }

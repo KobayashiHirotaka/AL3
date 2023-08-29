@@ -109,7 +109,7 @@ void Player::Draw(const ViewProjection& viewProjection)
 
 	if (behavior_ == Behavior::kAttack)
 	{
-		models_[kModelIndexHammer]->Draw(worldTransformHammer_, viewProjection);
+		/*models_[kModelIndexHammer]->Draw(worldTransformHammer_, viewProjection);*/
 	}
 }
 
@@ -211,8 +211,8 @@ void Player::BehaviorRootUpdate()
 
 void Player::BehaviorAttackInitialize() 
 { 
-	worldTransformL_arm_.rotation_.x = (float)M_PI;
-	worldTransformR_arm_.rotation_.x = (float)M_PI;
+	/*worldTransformL_arm_.rotation_.x = (float)M_PI;
+	worldTransformR_arm_.rotation_.x = (float)M_PI;*/
 	worldTransformHammer_.rotation_.x = 0.0f;
 	attackAnimationFrame = 0;
 }

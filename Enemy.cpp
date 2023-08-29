@@ -13,7 +13,7 @@ void Enemy::Update()
 {
 	attackTimer_--;
 
-	if (moveCount == 0)
+	/*if (moveCount == 0)
 	{
 		worldTransform_.translation_.x -= 0.5f;
 		if (worldTransform_.translation_.x <= -35)
@@ -75,7 +75,7 @@ void Enemy::Update()
 			moveCount = 0;
 			attackTimer_ = 240;
 		}
-	}
+	}*/
 
 
 	ICharacter::Update();
@@ -84,6 +84,7 @@ void Enemy::Update()
 	ImGui::Text("attackTimer %d", attackTimer_);
 	ImGui::Text("WTX %f", worldTransform_.translation_.z);
 	ImGui::Text("count %d", moveCount);
+	ImGui::Text("hp %f", hp);
 	ImGui::End();
 }
 
@@ -98,12 +99,12 @@ Vector3 Enemy::GetWorldPosition()
 
 	worldPos.x = worldTransform_.translation_.x;
 	worldPos.y = worldTransform_.translation_.y;
-	worldPos.z = worldTransform_.translation_.z;
+	worldPos.z = worldTransform_.translation_.z + 9.0f;
 
 	return worldPos;
 }
 
 void Enemy::OnCollision()
-{
-
+{ 
+	hp -= 0.01f;
 }

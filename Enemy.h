@@ -26,4 +26,6 @@ private:
 	int moveCount = 0;
 
 	Player* player_ = nullptr;
+
+	float hp = 3.0f;
 };
