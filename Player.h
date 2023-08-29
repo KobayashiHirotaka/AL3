@@ -72,5 +72,5 @@ private:
 
 	WorldTransform worldTransformHammer_;
 
-	float hp = 3.0f;
+	int hp = 3;
 };

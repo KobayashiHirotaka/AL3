@@ -64,6 +64,8 @@ void Player::Update()
 		{ 
 		case Behavior::kRoot:
 		default:
+			worldTransform_.translation_ = {0.0f, 0.0f, -30.0f};
+
 			BehaviorRootInitialize();
 			break;
 
@@ -93,10 +95,19 @@ void Player::Update()
 	worldTransformR_arm_.UpdateMatrix();
 	worldTransformHammer_.UpdateMatrix();
 
+	const float kMoveLimitX = 50.0f;
+	const float kMoveLimitZ = 50.0f;
+
+	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
+	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
+	worldTransform_.translation_.z = max(worldTransform_.translation_.z, -kMoveLimitZ);
+	worldTransform_.translation_.z = min(worldTransform_.translation_.z, +kMoveLimitZ);
+
+
 	ImGui::Begin("Player");
 	ImGui::Text("Attack RightButtom");
 	ImGui::Text("DebugCamera ENTER");
-	ImGui::Text("hp %f",hp);
+	ImGui::Text("hp %d",hp);
 	ImGui::End();
 }
 
@@ -109,7 +120,7 @@ void Player::Draw(const ViewProjection& viewProjection)
 
 	if (behavior_ == Behavior::kAttack)
 	{
-		/*models_[kModelIndexHammer]->Draw(worldTransformHammer_, viewProjection);*/
+		models_[kModelIndexHammer]->Draw(worldTransformHammer_, viewProjection);
 	}
 }
 
@@ -211,8 +222,8 @@ void Player::BehaviorRootUpdate()
 
 void Player::BehaviorAttackInitialize() 
 { 
-	/*worldTransformL_arm_.rotation_.x = (float)M_PI;
-	worldTransformR_arm_.rotation_.x = (float)M_PI;*/
+	worldTransformL_arm_.rotation_.x = (float)M_PI;
+	worldTransformR_arm_.rotation_.x = (float)M_PI;
 	worldTransformHammer_.rotation_.x = 0.0f;
 	attackAnimationFrame = 0;
 }
@@ -260,5 +271,5 @@ void Player::ApplyGlobalVariables()
 
 void Player::OnCollision()
 { 
-	hp -= 0.01f;
+	hp -= 1;
 }

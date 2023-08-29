@@ -16,6 +16,13 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	textureHandle_ = TextureManager::Load("playerHP.png");
+	
+	playerHpSprite_[0].reset(Sprite::Create(textureHandle_, {1080, 620}));
+	playerHpSprite_[1].reset(Sprite::Create(textureHandle_, {1140, 620}));
+	playerHpSprite_[2].reset(Sprite::Create(textureHandle_, {1200, 620}));
+
+
 	model_.reset(Model::Create());
 
 	playerModel_.reset(Model::CreateFromOBJ("player", true));
@@ -23,7 +30,7 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head", true));
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
-	/*modelFighterHammer_.reset(Model::CreateFromOBJ("hammer", true));*/
+	modelFighterHammer_.reset(Model::CreateFromOBJ("hammer", true));
 
 	enemyModel_.reset(Model::CreateFromOBJ("Enemy", true));
 
@@ -68,7 +75,12 @@ void GameScene::Initialize() {
 
 void GameScene::Update() 
 {
-	if (input_->TriggerKey(DIK_1))
+	if (!Input::GetInstance()->GetJoystickState(0, joyState_))
+	{
+		return;
+	}
+
+	if (scene_ == Scene::start && joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_A)
 	{
 		scene_ = Scene::play;
 	}
@@ -78,9 +90,19 @@ void GameScene::Update()
 		scene_ = Scene::clear;
 	}
 
-	if (scene_ == Scene::play && input_->TriggerKey(DIK_3))
+	if (scene_ == Scene::clear && joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_B)
+	{
+		scene_ = Scene::start;
+	}
+
+	if (scene_ == Scene::play && input_->TriggerKey(DIK_3) /*hpCount_ == 0*/)
 	{
 		scene_ = Scene::end;
+	}
+
+	if (scene_ == Scene::end && joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_B)
+	{
+		scene_ = Scene::start;
 	}
 
 	switch (scene_)
@@ -90,6 +112,15 @@ void GameScene::Update()
 		skydome_->Update();
 
 		ground_->Update();
+
+		
+	    lifeTimer_ = 90;
+		hpCount_ = 3;
+		isHit_ = 0;
+
+		ImGui::Begin("start");
+		ImGui::Text("title");
+		ImGui::End();
 		break;
 
 	case Scene::play:
@@ -104,14 +135,23 @@ void GameScene::Update()
 		viewProjection_.UpdateMatrix();
 
 		CheckAllCollisions();
+
+		ImGui::Begin("play");
+		ImGui::Text("lifeTimer %d", lifeTimer_);
+		ImGui::Text("hpCount %d", hpCount_);
+		ImGui::End();
+		
 		break;
 
 	case Scene::clear:
+		ImGui::Begin("clear");
+		ImGui::Text("Clear");
+		ImGui::End();
 		break;
 
 	case Scene::end:
-		ImGui::Begin("END");
-		ImGui::Text("Clear");
+		ImGui::Begin("end");
+		ImGui::Text("GameOver");
 		ImGui::End();
 		break;
 	}
@@ -210,6 +250,43 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	switch (scene_) {
+	case Scene::start:
+	default:
+		
+		break;
+
+	case Scene::play:
+		for (int i = 0; i < 3; i++)
+		{
+			if (hpCount_ == 3)
+			{
+				playerHpSprite_[i]->Draw();
+			}
+
+			if (hpCount_ == 2) 
+			{
+				playerHpSprite_[0]->Draw();
+				playerHpSprite_[1]->Draw();
+			}
+
+			if (hpCount_ == 1) 
+			{
+				playerHpSprite_[0]->Draw();
+			}
+		}
+		break;
+
+	case Scene::clear:
+		
+		break;
+
+	case Scene::end:
+		
+		break;
+	}
+	
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
@@ -231,11 +308,36 @@ void GameScene::CheckAllCollisions()
 	    (posB.x - posA.x) * (posB.x - posA.x), (posB.y - posA.y) * (posB.y - posA.y),
 	    (posB.z - posA.z) * (posB.z - posA.z)};
 
-	if (distance.x + distance.y + distance.z -5.0f <=
+	if (isHit_ == 1)
+	{
+		lifeTimer_--;
+	}
+
+	if (distance.x + distance.y + distance.z  <=
 	    (PlayerRadius + EnemyRadius) * (PlayerRadius + EnemyRadius))
 	{
-		player_->OnCollision();
+		isHit_ = 1;
+		if (isHit_ == 1 && lifeTimer_ >= 90)
+		{
+			player_->OnCollision();
+			hpCount_ -= 1;
+		}
+
+		if (lifeTimer_ <= 0)
+		{
+			lifeTimer_ = 90;
+			isHit_ = 0;
+		}
+
+	} else if (lifeTimer_ <= 0) {
+		lifeTimer_ = 90;
+		isHit_ = 0;
 	}
 
 	#pragma endregion
+
+	#pragma region 自キャラ
+
+
+    #pragma endregion
 }

@@ -55,6 +55,8 @@ private: // メンバ変数
 	Audio* audio_ = nullptr;
 
 	uint32_t textureHandle_ = 0;
+	std::unique_ptr<Sprite> playerHpSprite_[3];
+
 	std::unique_ptr<Model> model_;
 
 	WorldTransform worldTransform_;
@@ -84,6 +86,8 @@ private: // メンバ変数
 	std::unique_ptr<Enemy> enemy_;
 	std::unique_ptr<Model> enemyModel_;
 
+	std::unique_ptr<GameScene> gameScene_;
+
 	enum class Scene
 	{ 
 		start, 
@@ -95,4 +99,8 @@ private: // メンバ変数
 	Scene scene_ = Scene::start;
 
 	XINPUT_STATE joyState_;
+
+	int lifeTimer_;
+	int hpCount_;
+	bool isHit_;
 };
