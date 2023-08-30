@@ -43,8 +43,8 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("3.png");
 	numberSprite_[3].reset(Sprite::Create(textureHandle_, {1160, 20}));
 
-	/*soundDataHandle_ = audio_->LoadWave("loop100201.wav");
-	voiceHandle_ = audio_->PlayWave(soundDataHandle_,true);*/
+	soundDataHandle_ = audio_->LoadWave("loop100201.wav");
+	voiceHandle_ = audio_->PlayWave(soundDataHandle_,true);
 
 	model_.reset(Model::Create());
 
