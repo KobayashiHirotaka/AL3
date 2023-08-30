@@ -7,13 +7,17 @@ void Enemy::Initialize(const std::vector<Model*>& models)
 
 	worldTransform_.translation_.x = 30.0f;
 	worldTransform_.translation_.z = 30.0f;
+
+	attackTimer_ = 180;
+
+	moveCount = 0;
 }
 
 void Enemy::Update()
 {
 	attackTimer_--;
 
-	/*if (moveCount == 0)
+	if (moveCount == 0)
 	{
 		worldTransform_.translation_.x -= 0.5f;
 		if (worldTransform_.translation_.x <= -35)
@@ -60,7 +64,7 @@ void Enemy::Update()
 		{
 			worldTransform_.rotation_.y = 3.2f;
 			moveCount = 0;
-			attackTimer_ = 240;
+			attackTimer_ = rand() % 180;
 		}
 	}
 
@@ -73,19 +77,19 @@ void Enemy::Update()
 		{
 			worldTransform_.rotation_.y = 6.4f;
 			moveCount = 0;
-			attackTimer_ = 240;
+			attackTimer_ = 120;
 		}
-	}*/
+	}
 
 
 	ICharacter::Update();
 
-	ImGui::Begin("Enemy");
+	/*ImGui::Begin("Enemy");
 	ImGui::Text("attackTimer %d", attackTimer_);
 	ImGui::Text("WTX %f", worldTransform_.translation_.z);
 	ImGui::Text("count %d", moveCount);
 	ImGui::Text("hp %f", hp);
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)

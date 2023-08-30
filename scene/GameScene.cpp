@@ -22,6 +22,29 @@ void GameScene::Initialize() {
 	playerHpSprite_[1].reset(Sprite::Create(textureHandle_, {1140, 620}));
 	playerHpSprite_[2].reset(Sprite::Create(textureHandle_, {1200, 620}));
 
+	textureHandle_ = TextureManager::Load("title.png");
+	sceneTitleSprite_.reset(Sprite::Create(textureHandle_, {0, 0}));
+
+	textureHandle_ = TextureManager::Load("Clear.png");
+	sceneClearSprite_.reset(Sprite::Create(textureHandle_, {0, 0}));
+
+	textureHandle_ = TextureManager::Load("GameOver.png");
+	sceneGameOverSprite_.reset(Sprite::Create(textureHandle_, {0, 0}));
+
+	textureHandle_ = TextureManager::Load("0.png");
+	numberSprite_[0].reset(Sprite::Create(textureHandle_, {1200, 20}));
+
+	textureHandle_ = TextureManager::Load("1.png");
+	numberSprite_[1].reset(Sprite::Create(textureHandle_, {1160, 20}));
+
+	textureHandle_ = TextureManager::Load("2.png");
+	numberSprite_[2].reset(Sprite::Create(textureHandle_, {1160, 20}));
+
+	textureHandle_ = TextureManager::Load("3.png");
+	numberSprite_[3].reset(Sprite::Create(textureHandle_, {1160, 20}));
+
+	/*soundDataHandle_ = audio_->LoadWave("loop100201.wav");
+	voiceHandle_ = audio_->PlayWave(soundDataHandle_,true);*/
 
 	model_.reset(Model::Create());
 
@@ -49,8 +72,8 @@ void GameScene::Initialize() {
 
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 
-	AxisIndicator::GetInstance()->SetVisible(true);
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+	//AxisIndicator::GetInstance()->SetVisible(true);
+	//AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
@@ -85,7 +108,7 @@ void GameScene::Update()
 		scene_ = Scene::play;
 	}
 
-	if (scene_ == Scene::play && input_->TriggerKey(DIK_2))
+	if (scene_ == Scene::play && stageTimer_ <= 0)
 	{
 		scene_ = Scene::clear;
 	}
@@ -95,7 +118,7 @@ void GameScene::Update()
 		scene_ = Scene::start;
 	}
 
-	if (scene_ == Scene::play && input_->TriggerKey(DIK_3) /*hpCount_ == 0*/)
+	if (scene_ == Scene::play && hpCount_ == 0)
 	{
 		scene_ = Scene::end;
 	}
@@ -113,17 +136,23 @@ void GameScene::Update()
 
 		ground_->Update();
 
-		
+		stageTimer_ = 1800;
+
 	    lifeTimer_ = 90;
 		hpCount_ = 3;
 		isHit_ = 0;
 
-		ImGui::Begin("start");
-		ImGui::Text("title");
-		ImGui::End();
+		player_->SetWorldPosition(0.0f, 0.0f, -30.0f);
+
+		enemy_->SetWorldPosition(30.0f, 0.0f, 30.0f);
+		enemy_->SetRotationY(0.0f);
+		enemy_->SetAttackTimer(180);
+		enemy_->SetMoveCount(0);
+
 		break;
 
 	case Scene::play:
+		stageTimer_--;
 		skydome_->Update();
 
 		ground_->Update();
@@ -136,23 +165,12 @@ void GameScene::Update()
 
 		CheckAllCollisions();
 
-		ImGui::Begin("play");
-		ImGui::Text("lifeTimer %d", lifeTimer_);
-		ImGui::Text("hpCount %d", hpCount_);
-		ImGui::End();
-		
 		break;
 
 	case Scene::clear:
-		ImGui::Begin("clear");
-		ImGui::Text("Clear");
-		ImGui::End();
 		break;
 
 	case Scene::end:
-		ImGui::Begin("end");
-		ImGui::Text("GameOver");
-		ImGui::End();
 		break;
 	}
 
@@ -253,7 +271,7 @@ void GameScene::Draw() {
 	switch (scene_) {
 	case Scene::start:
 	default:
-		
+		sceneTitleSprite_->Draw();
 		break;
 
 	case Scene::play:
@@ -275,14 +293,34 @@ void GameScene::Draw() {
 				playerHpSprite_[0]->Draw();
 			}
 		}
+
+		
+		if (stageTimer_ <= 1800 && stageTimer_ > 1200) 
+		{
+			numberSprite_[3]->Draw();
+			numberSprite_[0]->Draw();
+		}
+	
+		if (stageTimer_ <= 1200 && stageTimer_ > 600)
+		{
+			numberSprite_[2]->Draw();
+			numberSprite_[0]->Draw();
+		}
+
+		if (stageTimer_ <= 600 && stageTimer_ > 0)
+		{
+			numberSprite_[1]->Draw();
+			numberSprite_[0]->Draw();
+		}
+
 		break;
 
 	case Scene::clear:
-		
+		sceneClearSprite_->Draw();
 		break;
 
 	case Scene::end:
-		
+		sceneGameOverSprite_->Draw();
 		break;
 	}
 	

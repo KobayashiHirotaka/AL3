@@ -28,7 +28,7 @@ void Player::Initialize(const std::vector<Model*>& models)
 	worldTransformR_arm_.Initialize();
 	worldTransformHammer_.Initialize();
 
-	GlobalVariables* globalVariables{};
+	/*GlobalVariables* globalVariables{};
 	globalVariables = GlobalVariables::GetInstance();
 
 	const char* groupName = "Player";
@@ -39,7 +39,7 @@ void Player::Initialize(const std::vector<Model*>& models)
 	globalVariables->AddItem(groupName, "ArmR Translation", worldTransformR_arm_.translation_);
 	globalVariables->AddItem(groupName, "floatingCycle_Arms", floatingCycle_[0]);
 	globalVariables->AddItem(groupName, "floatingCycleBody", floatingCycle_[1]);
-	globalVariables->AddItem(groupName, "floatingAmplitude", floatingAmplitude_);
+	globalVariables->AddItem(groupName, "floatingAmplitude", floatingAmplitude_);*/
 }
 
 void Player::Update() 
@@ -51,11 +51,6 @@ void Player::Update()
 		return;
 	}
 
-	if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
-	{
-		behaviorRequest_ = Behavior::kAttack;
-	}
-
 	if (behaviorRequest_)
 	{
 		behavior_ = behaviorRequest_.value();
@@ -64,8 +59,6 @@ void Player::Update()
 		{ 
 		case Behavior::kRoot:
 		default:
-			worldTransform_.translation_ = {0.0f, 0.0f, -30.0f};
-
 			BehaviorRootInitialize();
 			break;
 
@@ -104,11 +97,10 @@ void Player::Update()
 	worldTransform_.translation_.z = min(worldTransform_.translation_.z, +kMoveLimitZ);
 
 
-	ImGui::Begin("Player");
+	/*ImGui::Begin("Player");
 	ImGui::Text("Attack RightButtom");
 	ImGui::Text("DebugCamera ENTER");
-	ImGui::Text("hp %d",hp);
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void Player::Draw(const ViewProjection& viewProjection)
@@ -172,11 +164,11 @@ void Player::FloatingGimmickUpdate()
 	worldTransformL_arm_.rotation_.x = std::sin(floatingParameter_[1]) * 0.75f;
 	worldTransformR_arm_.rotation_.x = -std::sin(floatingParameter_[1]) * 0.75f;
 
-	ImGui::Begin("Model");
+	/*ImGui::Begin("Model");
 	ImGui::DragFloat3("Head", &worldTransformHead_.translation_.x, 0.01f);
 	ImGui::DragFloat3("ArmL", &worldTransformL_arm_.translation_.x, 0.01f);
 	ImGui::DragFloat3("ArmR", &worldTransformR_arm_.translation_.x, 0.01f);
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void Player::BehaviorRootInitialize()
@@ -198,7 +190,23 @@ void Player::BehaviorRootUpdate()
 {
 	if (Input::GetInstance()->GetJoystickState(0, joyState_))
 	{
-		const float kPlayerSpeed = 0.5f;
+		float kPlayerSpeed = 0.2f;
+
+		if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER && speedCount > 0)
+		{
+			speedCount -= 1;
+			kPlayerSpeed = 0.5f;
+
+			if (speedCount <= 0)
+			{
+				kPlayerSpeed = 0.3f;
+			}
+
+		} else if (speedCount < 20) {
+			speedCount += 1;
+		
+		}
+
 
 		Vector3 move = {
 		    (float)joyState_.Gamepad.sThumbLX / SHRT_MAX, 0.0f,
@@ -271,5 +279,5 @@ void Player::ApplyGlobalVariables()
 
 void Player::OnCollision()
 { 
-	hp -= 1;
+	
 }

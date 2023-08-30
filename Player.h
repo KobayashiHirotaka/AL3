@@ -22,6 +22,13 @@ public:
 
 	void SetParent(const WorldTransform* parent);
 
+	void SetWorldPosition(float posX, float posY, float posZ)
+	{ 
+		worldTransform_.translation_.x = posX;
+		worldTransform_.translation_.y = posY;
+		worldTransform_.translation_.z = posZ;
+	}
+
 	Vector3 GetWorldPosition();
 
 	void FloatingGimmickInitialize();
@@ -72,5 +79,15 @@ private:
 
 	WorldTransform worldTransformHammer_;
 
-	int hp = 3;
+	int speedCount = 20;
+
+	enum class Scene 
+	{   
+		start,
+		play,
+		clear,
+		end
+	};
+
+	Scene scene_ = Scene::start;
 };

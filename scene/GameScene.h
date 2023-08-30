@@ -54,8 +54,14 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
-	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle_= 0;
 	std::unique_ptr<Sprite> playerHpSprite_[3];
+
+	std::unique_ptr<Sprite> sceneTitleSprite_;
+	std::unique_ptr<Sprite> sceneClearSprite_;
+	std::unique_ptr<Sprite> sceneGameOverSprite_;
+
+	std::unique_ptr<Sprite> numberSprite_[10];
 
 	std::unique_ptr<Model> model_;
 
@@ -103,4 +109,9 @@ private: // メンバ変数
 	int lifeTimer_;
 	int hpCount_;
 	bool isHit_;
+
+	int stageTimer_;
+
+	uint32_t soundDataHandle_ = 0;
+	uint32_t voiceHandle_ = 0;
 };

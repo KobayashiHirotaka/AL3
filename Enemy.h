@@ -20,10 +20,23 @@ public:
 
 	Vector3 GetWorldPosition();
 
-private:
-	int attackTimer_ = 120;
+	void SetWorldPosition(float enemyX, float enemyY, float enemyZ)
+	{
+		worldTransform_.translation_.x = enemyX;
+		worldTransform_.translation_.y = enemyY;
+		worldTransform_.translation_.z = enemyZ;
+	}
 
-	int moveCount = 0;
+	void SetRotationY(float rotationY) { worldTransform_.rotation_.y = rotationY; }
+
+	void SetAttackTimer(int timer) { attackTimer_ = timer; }
+
+	void SetMoveCount(int count) { moveCount = count; }
+
+private:
+	int attackTimer_;
+
+	int moveCount;
 
 	Player* player_ = nullptr;
 
