@@ -61,7 +61,7 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> sceneClearSprite_;
 	std::unique_ptr<Sprite> sceneGameOverSprite_;
 
-	std::unique_ptr<Sprite> numberSprite_[10];
+	std::unique_ptr<Sprite> numberSprite_[4];
 
 	std::unique_ptr<Model> model_;
 

@@ -79,7 +79,7 @@ private:
 
 	WorldTransform worldTransformHammer_;
 
-	int speedCount = 20;
+	int speedCount_;
 
 	enum class Scene 
 	{   

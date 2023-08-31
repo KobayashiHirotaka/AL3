@@ -10,52 +10,52 @@ void Enemy::Initialize(const std::vector<Model*>& models)
 
 	attackTimer_ = 180;
 
-	moveCount = 0;
+	moveCount_ = 0;
 }
 
 void Enemy::Update()
 {
 	attackTimer_--;
 
-	if (moveCount == 0)
+	if (moveCount_ == 0)
 	{
 		worldTransform_.translation_.x -= 0.5f;
 		if (worldTransform_.translation_.x <= -35)
 		{
-			moveCount = 1;
+			moveCount_ = 1;
 		}
 
 		if (attackTimer_ <= 0 && worldTransform_.translation_.z > -70)
 		{
-			moveCount = 2;
+			moveCount_ = 2;
 		}
 
 		if (attackTimer_ <= 0 && worldTransform_.translation_.z < -70) 
 		{
-			moveCount = 3;
+			moveCount_ = 3;
 		}
 	}
 
-	if (moveCount == 1)
+	if (moveCount_ == 1)
 	{
 		worldTransform_.translation_.x += 0.5f;
 		if (worldTransform_.translation_.x >= 35) 
 		{
-			moveCount = 0;
+			moveCount_ = 0;
 		}
 
 		if (attackTimer_ <= 0 && worldTransform_.translation_.z > -70)
 		{
-			moveCount = 2;
+			moveCount_ = 2;
 		}
 
 		if (attackTimer_ <= 0 && worldTransform_.translation_.z < -70)
 		{
-			moveCount = 3;
+			moveCount_ = 3;
 		}
 	}
 
-	if (moveCount == 2)
+	if (moveCount_ == 2)
 	{
 		worldTransform_.translation_.z -= 0.8f;
 		worldTransform_.rotation_.y += 0.2f;
@@ -63,12 +63,12 @@ void Enemy::Update()
 		if (worldTransform_.translation_.z <= -70) 
 		{
 			worldTransform_.rotation_.y = 3.2f;
-			moveCount = 0;
+			moveCount_ = 0;
 			attackTimer_ = rand() % 180;
 		}
 	}
 
-	if (moveCount == 3)
+	if (moveCount_ == 3)
 	{
 		worldTransform_.translation_.z += 0.8f;
 		worldTransform_.rotation_.y -= 0.2f;
@@ -76,7 +76,7 @@ void Enemy::Update()
 		if (worldTransform_.translation_.z >= 30)
 		{
 			worldTransform_.rotation_.y = 6.4f;
-			moveCount = 0;
+			moveCount_ = 0;
 			attackTimer_ = 120;
 		}
 	}
@@ -110,5 +110,5 @@ Vector3 Enemy::GetWorldPosition()
 
 void Enemy::OnCollision()
 { 
-	hp -= 0.01f;
+	
 }

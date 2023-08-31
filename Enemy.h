@@ -31,14 +31,12 @@ public:
 
 	void SetAttackTimer(int timer) { attackTimer_ = timer; }
 
-	void SetMoveCount(int count) { moveCount = count; }
+	void SetMoveCount(int count) { moveCount_ = count; }
 
 private:
 	int attackTimer_;
 
-	int moveCount;
+	int moveCount_;
 
 	Player* player_ = nullptr;
-
-	float hp = 3.0f;
 };

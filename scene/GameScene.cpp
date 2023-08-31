@@ -98,7 +98,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() 
 {
-	if (!Input::GetInstance()->GetJoystickState(0, joyState_))
+	if (!Input::GetInstance()->GetJoystickState(0, joyState_)) 
 	{
 		return;
 	}
@@ -373,9 +373,4 @@ void GameScene::CheckAllCollisions()
 	}
 
 	#pragma endregion
-
-	#pragma region 自キャラ
-
-
-    #pragma endregion
 }

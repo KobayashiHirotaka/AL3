@@ -28,7 +28,9 @@ void Player::Initialize(const std::vector<Model*>& models)
 	worldTransformR_arm_.Initialize();
 	worldTransformHammer_.Initialize();
 
-	/*GlobalVariables* globalVariables{};
+	speedCount_ = 20;
+
+	GlobalVariables* globalVariables{};
 	globalVariables = GlobalVariables::GetInstance();
 
 	const char* groupName = "Player";
@@ -39,7 +41,7 @@ void Player::Initialize(const std::vector<Model*>& models)
 	globalVariables->AddItem(groupName, "ArmR Translation", worldTransformR_arm_.translation_);
 	globalVariables->AddItem(groupName, "floatingCycle_Arms", floatingCycle_[0]);
 	globalVariables->AddItem(groupName, "floatingCycleBody", floatingCycle_[1]);
-	globalVariables->AddItem(groupName, "floatingAmplitude", floatingAmplitude_);*/
+	globalVariables->AddItem(groupName, "floatingAmplitude", floatingAmplitude_);
 }
 
 void Player::Update() 
@@ -192,18 +194,18 @@ void Player::BehaviorRootUpdate()
 	{
 		float kPlayerSpeed = 0.2f;
 
-		if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER && speedCount > 0)
+		if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER && speedCount_ > 0)
 		{
-			speedCount -= 1;
+			speedCount_ -= 1;
 			kPlayerSpeed = 0.5f;
 
-			if (speedCount <= 0)
+			if (speedCount_ <= 0)
 			{
 				kPlayerSpeed = 0.3f;
 			}
 
-		} else if (speedCount < 20) {
-			speedCount += 1;
+		} else if (speedCount_ < 20) {
+			speedCount_ += 1;
 		
 		}
 
